@@ -1,0 +1,74 @@
+import { useMemo, useState } from 'react';
+
+import size from 'lodash/size';
+
+import Box from '@components/Box';
+
+import { TabPanelProps, TabsProps } from './props';
+import { StyledTab, StyledTabs, TabsGroup } from './styles';
+
+const TabPanel = ({ children, hidden, index }: TabPanelProps) => {
+  if (hidden) return null;
+
+  return (
+    <Box role='tabPanel' id={`tabPanel-${index}`} aria-labelledby={`tab-${index}`} sx={{ py: 2 }}>
+      {children}
+    </Box>
+  );
+};
+
+export default ({ tabs, activeTab, orientation, height, width, divider, onChange, ...rest }: TabsProps) => {
+  const [value, setValue] = useState<number>(activeTab || 0);
+
+  if (!tabs || !size(tabs)) return null;
+
+  // To Do: Mode Vertical and Horizontal (WIP: Vertical)
+  const getStyle = useMemo(() => {
+    if (orientation === 'vertical') return { flexGrow: 1, display: 'flex', height: height || '100%' };
+
+    return { width: width || '100%' };
+  }, [orientation, height, width]);
+
+  const renderTabs = useMemo(() => {
+    const _tabs = (
+      <StyledTabs
+        aria-label='Tabs'
+        value={value}
+        orientation={orientation}
+        TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }}
+        onChange={(e: React.SyntheticEvent, newValue: number) => {
+          if (onChange) onChange(newValue);
+          setValue(newValue);
+        }}
+        {...rest}
+      >
+        {tabs.map((tab, index) => (
+          <StyledTab id={`tab-${index}`} key={`tab-${index}`} aria-controls={`tabPanel-${index}`} {...tab} />
+        ))}
+      </StyledTabs>
+    );
+
+    if (divider)
+      return (
+        <TabsGroup>
+          {divider && <Box className='Divider' />}
+          {_tabs}
+        </TabsGroup>
+      );
+
+    return _tabs;
+  }, [divider, tabs, orientation, value]);
+
+  return (
+    <Box sx={getStyle}>
+      {/* Render Tabs */}
+      {renderTabs}
+      {/* Render Tab Content */}
+      {tabs.map(({ content }, index) => (
+        <TabPanel key={`tabPanel-${index}`} index={index} hidden={value !== index}>
+          {content}
+        </TabPanel>
+      ))}
+    </Box>
+  );
+};

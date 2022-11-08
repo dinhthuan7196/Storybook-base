@@ -1,0 +1,36 @@
+import { ReactElement, Ref, forwardRef } from 'react';
+
+import Slide from '@mui/material/Slide';
+import Toolbar from '@mui/material/Toolbar';
+import { TransitionProps } from '@mui/material/transitions';
+
+import CloseIcon from '@mui/icons-material/CloseRounded';
+
+import Box from '@components/Box';
+import IconButton from '@components/IconButton';
+
+import { FullScreenDialogProps } from './props';
+import { StyledAppBar, StyledDialog, Title } from './styles';
+
+const Transition = forwardRef((props: TransitionProps & { children: ReactElement }, ref: Ref<unknown>) => (
+  <Slide direction='up' ref={ref} {...props} />
+));
+
+export default ({ children, groupButtons, title, open, onClose, ...rest }: FullScreenDialogProps) => (
+  <StyledDialog fullScreen open={!!open} onClose={onClose} TransitionComponent={Transition} {...rest}>
+    <StyledAppBar>
+      <Toolbar>
+        <IconButton aria-label='close' size='small' onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+        {!!title && (
+          <Title component='div' variant='titleLarge'>
+            {title}
+          </Title>
+        )}
+        {groupButtons}
+      </Toolbar>
+    </StyledAppBar>
+    <Box>{children}</Box>
+  </StyledDialog>
+);
