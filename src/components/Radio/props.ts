@@ -1,14 +1,13 @@
+import { FormControlProps } from '../FormControl/props';
+
 export type option = {
   label: string;
   value: unknown;
   disabled?: boolean;
 };
 
-export type RadioProps = {
-  className?: string;
-  fullWidth?: boolean;
-  label?: string;
-  disabled?: boolean;
+export type RadioProps = FormControlProps & {
+  row?: boolean;
   options: option[];
   value?: unknown;
   onChange?: (value: unknown) => void;

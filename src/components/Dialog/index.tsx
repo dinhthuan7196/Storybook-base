@@ -21,7 +21,6 @@ const Dialog: FC<DialogProps> = ({
   onClose,
   open,
   loading,
-  hasCloseIcon,
   title,
   subtitle,
   subtitle2,
@@ -72,20 +71,18 @@ const Dialog: FC<DialogProps> = ({
                 </Typography>
               </Box>
             )}
-            {hasCloseIcon && (
-              <Box>
-                <IconButton aria-label='close' className='closeButton' size='large' onClick={onClose}>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            )}
+            <Box>
+              <IconButton aria-label='close' className='closeButton' size='large' onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
           </Box>
         </MDialogTitle>
         {!!subtitle && <Typography className='subtitleDialog'>{subtitle}</Typography>}
         {!!subtitle2 && <Typography className='subtitle2Dialog'>{subtitle2}</Typography>}
       </>
     );
-  }, [loading, title, subtitle, subtitle2, titleProps, hasCloseIcon]);
+  }, [loading, title, subtitle, subtitle2, titleProps]);
 
   const renderContent = useMemo(() => {
     if (loading) return <Skeleton height={200} />;

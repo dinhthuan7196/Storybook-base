@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Dialog from '@mui/material/Dialog';
 import { styled } from '@mui/material/styles';
 
+import Box from '@components/Box';
 import Typography from '@components/Typography';
 
 const StyledAppBar = styled(AppBar)(({ theme }: Record<string, any>) => ({
@@ -24,4 +25,16 @@ const StyledDialog = styled(Dialog)(({ theme }: Record<string, any>) => ({
   },
 }));
 
-export { StyledAppBar, StyledDialog, Title };
+const Content = styled(Box)(({ theme }: Record<string, any>) => ({
+  overflowY: 'auto',
+  marginRight: theme.spacing(0.5),
+  '&::-webkit-scrollbar': {
+    width: 5,
+  },
+  '&::-webkit-scrollbar-thumb': {
+    borderRadius: theme.borderRadius.default,
+    backgroundColor: theme.newColors.gray[300],
+  },
+}));
+
+export { StyledAppBar, StyledDialog, Title, Content };

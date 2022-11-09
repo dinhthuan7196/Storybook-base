@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import Dropdown from '@components/Dropdown';
+import DropdownNew from '@components/Dropdown/DropdownNew';
 import { DropdownProps, option, selectedOption } from '@components/Dropdown/props';
 
 export default {
@@ -33,7 +34,14 @@ const data: option[] = [
 export const Demo: ComponentStory<typeof Dropdown> = (args: DropdownProps) => {
   const [selected, setSelected] = useState<selectedOption>(args.multiple ? [] : null);
 
-  return <Dropdown {...args} value={selected} onChange={(values: selectedOption) => setSelected(values)} />;
+  return (
+    <>
+      <Dropdown {...args} value={selected} onChange={(values: selectedOption) => setSelected(values)} />
+      <div style={{ marginTop: 20 }}>
+        <DropdownNew />
+      </div>
+    </>
+  );
 };
 
 Demo.args = {
@@ -49,5 +57,4 @@ Demo.args = {
   disableFilter: false,
   loadingText: <div>Loading ...</div>,
   noOptionsText: <div>No options</div>,
-  errorMessage: 'This is a message',
 };

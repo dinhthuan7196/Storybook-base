@@ -78,20 +78,13 @@ export default ({
         renderTags={(values: option[], getTagProps) =>
           values.map(({ label }: option, index) => renderChip(label, getTagProps({ index })))
         }
-        renderInput={({ inputProps, ...params }) => {
-          console.log({
-            inputProps,
-            ...params,
-          });
-
-          return (
-            <TextField
-              {...params}
-              placeholder={!value || !size(value) ? placeholder || 'Select an option' : ''}
-              inputProps={{ ...inputProps, readOnly: disableFilter }}
-            />
-          );
-        }}
+        renderInput={({ inputProps, ...params }) => (
+          <TextField
+            {...params}
+            placeholder={!value || !size(value) ? placeholder || 'Select an option' : ''}
+            inputProps={{ ...inputProps, readOnly: disableFilter }}
+          />
+        )}
         renderOption={(props: Record<string, any>, { label }: option, { selected }: Record<string, any>) =>
           renderTags(props, label, multiple, selected)
         }

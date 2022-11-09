@@ -4,12 +4,12 @@ import FormLabel from '@mui/material/FormLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-const StyledFormControl = styled(FormControl)(({ theme }: Record<string, any>) => ({
+const StyledFormControl = styled(FormControl)(({ theme, error }: Record<string, any>) => ({
   '& .MuiInputBase-root': {
     fontSize: theme.fontSize.xMedium,
   },
   '& .MuiFormLabel-root.Mui-focused': {
-    color: theme.newColors.gray[600],
+    color: error ? theme.newColors.red[600] : theme.newColors.gray[600],
   },
 }));
 
@@ -17,9 +17,6 @@ const StyledFormLabel = styled(FormLabel)(({ theme, disabled }: Record<string, a
   fontWeight: theme.fontWeight.semi,
   lineHeight: theme.spacing(2.5),
   color: `${theme.newColors.gray[600]} ${disabled ? '!important' : ''}`,
-  '& .MuiFormLabel-asterisk': {
-    color: theme.newColors.red[600],
-  },
 }));
 
 const StyledFormHelperText = styled(FormHelperText)(({ theme, disabled }: Record<string, any>) => ({

@@ -65,7 +65,7 @@ const StyledTablePagination = styled(TablePagination)<{ component?: React.Elemen
         backgroundColor: 'unset',
       },
     },
-    '& .MuiSvgIcon-root': {
+    '& .MuiTablePagination-actions': {
       marginRight: theme.spacing(1),
     },
     '& .MuiInputBase-root': {

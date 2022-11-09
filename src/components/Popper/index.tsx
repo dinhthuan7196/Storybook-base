@@ -1,3 +1,3 @@
-import MPopper, { PopperProps } from '@mui/material/Popper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 
-export default (props: PopperProps) => <MPopper {...props} />;
+export default (props: PopperProps) => <Popper {...props} />;

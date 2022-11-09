@@ -22,9 +22,12 @@ const StyledOutlinedInput = styled(OutlinedInput)(({ theme, disabled, error }: R
   fontSize: theme.fontSize.xMedium,
   backgroundColor: disabled ? theme.newColors.gray[100] : 'white',
   borderRadius: theme.borderRadius.default,
+  '&:has(textarea)': {
+    paddingRight: theme.spacing(1),
+  },
   '& textarea': {
     '::-webkit-scrollbar': {
-      display: 'none',
+      // display: 'none',
     },
   },
   '& .Mui-focused': {

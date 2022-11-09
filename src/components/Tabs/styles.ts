@@ -1,5 +1,3 @@
-import size from 'lodash/size';
-
 import { styled } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -20,25 +18,13 @@ const StyledTab = styled(Tab)(({ theme }: Record<string, any>) => ({
   ':first-of-type': {
     paddingLeft: `${theme.spacing(0)} !important`,
   },
-  ':last-of-type': {
-    paddingRight: `${theme.spacing(0)} !important`,
-  },
 }));
 
-const StyledTabs = styled(Tabs)(({ theme, value, children }: Record<string, any>) => {
-  const total = size(children) - 1;
+const StyledTabs = styled(Tabs)(({ theme, value }: Record<string, any>) => {
   let justifyContent = 'center';
 
-  switch (value) {
-    case 0:
-      justifyContent = 'start';
-      break;
-    case total:
-      justifyContent = 'end';
-      break;
-
-    default:
-      break;
+  if (!value) {
+    justifyContent = 'start';
   }
 
   return {
@@ -64,7 +50,7 @@ const StyledTabs = styled(Tabs)(({ theme, value, children }: Record<string, any>
       backgroundColor: theme.newColors.primary[500],
       height: theme.spacing(0.25),
       borderRadius: theme.spacing(0.25),
-      width: `calc(100% - ${theme.spacing(!value || value === total ? 1 : 2)})`,
+      width: `calc(100% - ${theme.spacing(!value ? 1 : 2)})`,
     },
   };
 });

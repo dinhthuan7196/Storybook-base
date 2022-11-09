@@ -6,7 +6,6 @@ import { DialogTitleProps } from '@mui/material/DialogTitle';
 export type DialogProps = DefaultProps & {
   onClose: () => void;
   loading?: boolean;
-  hasCloseIcon?: boolean;
   title?: string;
   subtitle?: string;
   subtitle2?: string;

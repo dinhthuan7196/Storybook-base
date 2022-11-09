@@ -17,8 +17,17 @@ const TabPanel = ({ children, hidden, index }: TabPanelProps) => {
   );
 };
 
-export default ({ tabs, activeTab, orientation, height, width, divider, onChange, ...rest }: TabsProps) => {
-  const [value, setValue] = useState<number>(activeTab || 0);
+export default ({
+  tabs,
+  defaultTab,
+  orientation,
+  height,
+  width,
+  divider,
+  handleChangeTab = () => {},
+  ...rest
+}: TabsProps) => {
+  const [value, setValue] = useState<number>(defaultTab || 0);
 
   if (!tabs || !size(tabs)) return null;
 
@@ -37,7 +46,7 @@ export default ({ tabs, activeTab, orientation, height, width, divider, onChange
         orientation={orientation}
         TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }}
         onChange={(e: React.SyntheticEvent, newValue: number) => {
-          if (onChange) onChange(newValue);
+          handleChangeTab(newValue);
           setValue(newValue);
         }}
         {...rest}

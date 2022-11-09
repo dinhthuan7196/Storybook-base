@@ -14,10 +14,10 @@ export type TabsProps = {
   variant?: 'scrollable' | 'standard';
   tabs?: Tab[];
   orientation?: 'horizontal' | 'vertical';
-  activeTab?: number;
+  defaultTab?: number;
   scrollButtons?: boolean;
   divider?: boolean;
-  onChange?: (tab: unknown) => void;
+  handleChangeTab?: (tab: number) => void;
   height?: number | string;
   width?: number | string;
 };

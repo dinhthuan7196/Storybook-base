@@ -1,5 +1,6 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react';
 
+import chunk from 'lodash/chunk';
 import size from 'lodash/size';
 
 import Table from '@mui/material/Table';
@@ -28,6 +29,8 @@ export default ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const _data = useMemo(() => chunk(rows, rowsPerPage), [rows, rowsPerPage]);
+
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
   };
@@ -49,7 +52,7 @@ export default ({
   const renderBody = useMemo(() => {
     if (!size(rows)) return renderChildren(emptyData);
 
-    return rows.map((row, idx) => (
+    return _data[page].map((row, idx) => (
       <StyledTableRow hover key={`row_${idx}`}>
         {columns.map(({ key, alignData, renderCell }) => {
           const value = row?.[key] ?? '';
@@ -62,7 +65,7 @@ export default ({
         })}
       </StyledTableRow>
     ));
-  }, [rows, columns, emptyData]);
+  }, [columns, emptyData, page, _data]);
 
   return (
     <Paper className={className} elevation={0} sx={{ borderRadius: 4, overflow: 'hidden' }}>

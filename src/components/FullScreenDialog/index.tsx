@@ -6,11 +6,10 @@ import { TransitionProps } from '@mui/material/transitions';
 
 import CloseIcon from '@mui/icons-material/CloseRounded';
 
-import Box from '@components/Box';
 import IconButton from '@components/IconButton';
 
 import { FullScreenDialogProps } from './props';
-import { StyledAppBar, StyledDialog, Title } from './styles';
+import { Content, StyledAppBar, StyledDialog, Title } from './styles';
 
 const Transition = forwardRef((props: TransitionProps & { children: ReactElement }, ref: Ref<unknown>) => (
   <Slide direction='up' ref={ref} {...props} />
@@ -31,6 +30,6 @@ export default ({ children, groupButtons, title, open, onClose, ...rest }: FullS
         {groupButtons}
       </Toolbar>
     </StyledAppBar>
-    <Box>{children}</Box>
+    <Content>{children}</Content>
   </StyledDialog>
 );

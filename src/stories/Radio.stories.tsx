@@ -19,6 +19,11 @@ export default {
         type: 'boolean',
       },
     },
+    row: {
+      control: {
+        type: 'boolean',
+      },
+    },
     fullWidth: {
       control: {
         type: 'boolean',
@@ -38,6 +43,7 @@ Demo.args = {
   disabled: false,
   fullWidth: false,
   value: 'value 01',
+  row: true,
   options: [
     {
       label: 'Label 01',

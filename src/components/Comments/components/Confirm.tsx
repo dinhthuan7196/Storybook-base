@@ -39,13 +39,7 @@ const FormConfirm: FC<DefaultsProps> = ({ id, loading, onClose }) => {
   );
 
   return (
-    <Dialog
-      hasCloseIcon
-      open={!!id}
-      title={confirmProps?.title ?? MESSAGE.TITLE_CONFIRM}
-      onClose={onClose}
-      footer={renderFooter}
-    >
+    <Dialog open={!!id} title={confirmProps?.title ?? MESSAGE.TITLE_CONFIRM} onClose={onClose} footer={renderFooter}>
       <Typography variant='bodyLarge'>{confirmProps?.message ?? MESSAGE.CONFIRM}</Typography>
     </Dialog>
   );

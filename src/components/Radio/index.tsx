@@ -4,12 +4,12 @@ import { withStyles } from 'tss-react/mui';
 
 import size from 'lodash/size';
 
-import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
 import MRadio, { RadioProps as MRadioProps } from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import SvgIcon from '@mui/material/SvgIcon';
+
+import FormControl from '@components/FormControl';
 
 import { ReactComponent as RadioUncheck } from '../../assets/images/icn_radio.svg';
 import { ReactComponent as RadioChecked } from '../../assets/images/icn_radio_checked.svg';
@@ -29,11 +29,10 @@ const StyledRadio: FC<MRadioProps> = ({ disabled, ...rest }) => (
   />
 );
 
-const Radio: FC<RadioProps> = ({ label, options, value, onChange, className, ...rest }) => (
-  <FormControl className={className} {...rest}>
-    {!!label && <FormLabel>{label}</FormLabel>}
+const Radio: FC<RadioProps> = ({ options, value, row = true, onChange, ...rest }) => (
+  <FormControl {...rest}>
     <RadioGroup
-      row
+      row={row}
       value={value}
       onChange={(event: React.ChangeEvent<HTMLInputElement>, value: string) => onChange && onChange(value)}
     >
