@@ -85,6 +85,7 @@ TextInput.args = {
   endAdornment: <span>.tabula.com</span>,
   rows: 5,
   multiline: false,
+  onClear: () => alert('Clear value ??'),
   ...defaultProps,
 };
 

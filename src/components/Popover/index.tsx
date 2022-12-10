@@ -6,7 +6,7 @@ const StyledPopover = styled(Popover)(({ theme, elevation }: Record<string, any>
     borderRadius: theme.borderRadius.default,
   };
 
-  if (!elevation) {
+  if (elevation === undefined) {
     defaults.boxShadow = theme.elevations.depth02;
   }
 

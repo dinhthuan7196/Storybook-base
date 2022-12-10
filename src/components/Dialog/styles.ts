@@ -5,12 +5,18 @@ const styles: any = (theme: Record<string, any>) => ({
     color: theme.newColors.gray[800],
     borderRadius: theme.spacing(2),
     boxShadow: `${theme.spacing(0, 0, 2, 0)} rgba(0, 0, 0, 0.24)`,
+    '& ::-webkit-scrollbar': {
+      width: 5,
+    },
+    '& ::-webkit-scrollbar-thumb': {
+      borderRadius: theme.borderRadius.default,
+      backgroundColor: theme.newColors.gray[300],
+    },
   },
   root: {
-    zIndex: theme.zIndex.drawer,
     '& .MuiDialogTitle-root': {
       wordBreak: 'break-all',
-      padding: theme.spacing(0),
+      padding: theme.spacing(0, 0, 0, 1),
     },
     '& .subtitleDialog': {
       fontSize: theme.fontSize.normal,
@@ -26,7 +32,7 @@ const styles: any = (theme: Record<string, any>) => ({
     },
     '& .MuiDialogContent-root': {
       margin: theme.spacing(2, 0),
-      padding: theme.spacing(0),
+      padding: theme.spacing(0, 1),
       '& .MuiDialogContentText-root': {
         fontSize: theme.fontSize.small,
         fontWeight: theme.fontWeight.normal,

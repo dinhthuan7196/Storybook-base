@@ -1,9 +1,10 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-export type option = {
+export type option = Record<string, any> & {
   value: string | number;
   label: string;
   disabled?: boolean;
+  renderOptionLabel?: () => string;
 };
 
 export type selectedOption = option | option[] | null;
@@ -13,18 +14,21 @@ export type DropdownProps = {
   disabled?: boolean;
   loading?: boolean;
   multiple?: boolean;
+  error?: boolean;
   disableCloseOnSelect?: boolean;
   noOptionsText?: React.ReactNode;
   loadingText?: React.ReactNode;
   limitTags?: number;
   placeholder?: string;
+  helperText?: string;
   value?: selectedOption;
   onChange?: (values: selectedOption) => void;
   sx?: SxProps<Theme>;
   label?: string;
-  errorMessage?: string;
   width?: number | string;
   required?: boolean;
   disableFilter?: boolean;
   className?: string;
+  disablePortal?: boolean;
+  disableClearable?: boolean;
 };

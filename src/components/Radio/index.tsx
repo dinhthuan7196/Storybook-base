@@ -34,7 +34,7 @@ const Radio: FC<RadioProps> = ({ options, value, row = true, onChange, ...rest }
     <RadioGroup
       row={row}
       value={value}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>, value: string) => onChange && onChange(value)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>, value: unknown) => onChange && onChange(value)}
     >
       {!!size(options) &&
         options.map((props: option, idx: number) => (

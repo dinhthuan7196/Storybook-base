@@ -19,6 +19,7 @@ import Dialog from './components/Dialog';
 import DialogContentText from './components/DialogContentText';
 import Divider from './components/Divider';
 import Dropdown from './components/Dropdown';
+import EmptyContent from './components/EmptyContent';
 import FormControl from './components/FormControl';
 import FullScreenDialog from './components/FullScreenDialog';
 import Grid from './components/Grid';
@@ -54,6 +55,7 @@ import LocalizationProvider from './styles/LocalizationProvider';
 import ThemeProvider from './styles/ThemeProvider';
 
 export {
+  EmptyContent,
   Tabs,
   Alert,
   FullScreenDialog,

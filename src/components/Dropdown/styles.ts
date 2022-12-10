@@ -1,25 +1,13 @@
-import FormControl from '@mui/material/FormControl';
+// import FormControl from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 
-const StyledFormControl = styled(FormControl)(({ theme, disabled }: Record<string, any>) => {
+import FormControl from '@components/FormControl';
+
+const StyledFormControl = styled(FormControl)(({ theme, disabled, error }: Record<string, any>) => {
   const space_4 = theme.spacing(0.5);
   const space_8 = theme.spacing(1);
 
   return {
-    "& .MuiFormControl-root label[class*='Mui-disabled']": {
-      color: theme.newColors.gray[600],
-    },
-    '& .MuiFormLabel-root': {
-      color: theme.newColors.gray[600],
-      fontWeight: theme.fontWeight.semi,
-      lineHeight: theme.spacing(2.5),
-      marginBottom: 5,
-    },
-    '& .MuiFormHelperText-root': {
-      marginTop: 5,
-      marginLeft: 0,
-      fontSize: theme.fontSize.normal,
-    },
     '& .MuiInputBase-root': {
       backgroundColor: 'white',
       borderRadius: theme.borderRadius.default,
@@ -28,19 +16,23 @@ const StyledFormControl = styled(FormControl)(({ theme, disabled }: Record<strin
     },
     '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
       borderWidth: `${theme.spacing(0.1875)}`,
-      borderColor: `${!disabled ? theme.newColors.gray[200] : theme.newColors.gray[100]} !important`,
+      borderColor: `${
+        !disabled ? (error ? theme.newColors.red[600] : theme.newColors.gray[200]) : theme.newColors.gray[100]
+      } !important`,
       transition: theme.transitionDefault,
     },
     '&:hover': {
       '.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-        borderColor: `${!disabled ? theme.newColors.primary[500] : 'none'} !important`,
+        borderColor: `${
+          disabled ? 'none' : error ? theme.newColors.red[600] : theme.newColors.primary[500]
+        } !important`,
       },
     },
     '&:focus-within': {
       '.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
         borderWidth: `${theme.spacing(0.1875)}`,
-        borderColor: `${theme.newColors.primary[500]} !important`,
-        boxShadow: `0 0 0 4px ${theme.newColors.primary[50]}`,
+        borderColor: `${error ? theme.newColors.red[600] : theme.newColors.primary[500]} !important`,
+        boxShadow: `${theme.spacing(0, 0, 0, 0.5)} ${error ? theme.newColors.red[50] : theme.newColors.primary[50]}`,
       },
     },
     '& .MuiAutocomplete-root .Mui-disabled': {
@@ -71,9 +63,6 @@ const StyledFormControl = styled(FormControl)(({ theme, disabled }: Record<strin
       padding: space_8,
       marginLeft: space_8,
       marginRight: space_8,
-    },
-    '& .MuiFormLabel-asterisk': {
-      color: theme.newColors.red[500],
     },
     '& .MuiAutocomplete-paper': {
       paddingRight: space_4,

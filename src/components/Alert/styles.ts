@@ -3,14 +3,12 @@ const styles = (theme: Record<string, any>) => ({
     borderRadius: theme.borderRadius.default,
     padding: theme.spacing(1, 2),
     alignItems: 'center',
-    width: 'fit-content',
   },
   icon: {
     padding: 0,
   },
   message: {
     padding: 0,
-    marginRight: theme.spacing(2),
     ...theme.typography.bodyLarge,
   },
   standardSuccess: {

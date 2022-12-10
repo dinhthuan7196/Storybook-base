@@ -27,7 +27,7 @@ const styles: any = (theme: Record<string, any>) => ({
     '& .MuiFormGroup-root': {
       padding: theme.spacing(1, 0),
     },
-    '& .MuiFormGroup-root:not(.MuiFormGroup-row) label[class*="MuiFormControlLabel-root"]': {
+    '& .MuiFormGroup-root:not(.MuiFormGroup-row) label[class*="MuiFormControlLabel-root"]:not(:last-child)': {
       marginBottom: theme.spacing(2),
     },
   },

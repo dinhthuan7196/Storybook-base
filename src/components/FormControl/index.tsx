@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import Box from '@components/Box';
 import Tooltip from '@components/Tooltip';
@@ -26,7 +26,7 @@ export default forwardRef<HTMLDivElement, FormControlProps>(
             )}
             {helperLabel && (
               <Tooltip title={helperLabel} arrow placement='right'>
-                <HelpOutlineRoundedIcon sx={{ fontSize: 12 }} />
+                <InfoOutlinedIcon sx={{ fontSize: 12, mt: 0.5, ml: 0.35 }} />
               </Tooltip>
             )}
           </Box>

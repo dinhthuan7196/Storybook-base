@@ -34,7 +34,7 @@ export default {
   // title large
   titleLarge: {
     fontSize: fontSize.xxxMedium,
-    lineHeight: '32px',
+    lineHeight: '28px',
     fontWeight: fontWeight.semi,
     letterSpacing: 0,
     fontFamily,

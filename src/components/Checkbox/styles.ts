@@ -6,6 +6,7 @@ const styles = (theme: Record<string, any>) => ({
       width: theme.spacing(3),
       borderRadius: theme.spacing(1.2),
       padding: '2px',
+      fill: 'none',
     },
 
     '&:active': {
@@ -27,11 +28,11 @@ const styles = (theme: Record<string, any>) => ({
     },
 
     '& svg#icn_checkbox_unselected path': {
-      fill: '#FFFFFF',
+      // fill: 'white',
       stroke: theme.newColors.gray[400],
     },
     '& svg#icn_checkbox_unselected path#unselected_icon': {
-      stroke: '#FFFFFF',
+      stroke: 'white',
     },
 
     '& svg#icn_checkbox_selected path': {
@@ -39,11 +40,11 @@ const styles = (theme: Record<string, any>) => ({
       stroke: theme.newColors.primary[800],
     },
     '& svg#icn_checkbox_selected path#selected_icon': {
-      stroke: '#FFFFFF',
+      stroke: 'white',
     },
 
     '& svg#icn_checkbox_indeterminate g#indeterminate_icon path': {
-      fill: '#FFFFFF',
+      // fill: 'white',
     },
   },
 

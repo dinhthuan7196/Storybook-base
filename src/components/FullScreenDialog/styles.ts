@@ -27,7 +27,7 @@ const StyledDialog = styled(Dialog)(({ theme }: Record<string, any>) => ({
 
 const Content = styled(Box)(({ theme }: Record<string, any>) => ({
   overflowY: 'auto',
-  marginRight: theme.spacing(0.5),
+  paddingBottom: theme.spacing(10),
   '&::-webkit-scrollbar': {
     width: 5,
   },

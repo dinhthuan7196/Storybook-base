@@ -18,15 +18,19 @@ interface CustomProps {
   onChange: (event: { target: { value: number | undefined } }) => void;
   mask?: 'string';
   format?: 'string';
+  decimalScale?: number;
 }
 
-const NumberFormatCustom = forwardRef<NumberFormat<InputAttributes>, CustomProps>(({ onChange, ...rest }, ref) => (
-  <NumberFormat
-    {...rest}
-    getInputRef={ref}
-    onValueChange={({ floatValue }) => onChange({ target: { value: floatValue } })}
-  />
-));
+const NumberFormatCustom = forwardRef<NumberFormat<InputAttributes>, CustomProps>(
+  ({ decimalScale = 0, onChange, ...rest }, ref) => (
+    <NumberFormat
+      {...rest}
+      decimalScale={decimalScale}
+      getInputRef={ref}
+      onValueChange={({ floatValue }) => onChange({ target: { value: floatValue } })}
+    />
+  )
+);
 
 export default ({ value, inputProps, endAdornment, ...rest }: TextFieldProps) => {
   const { onStep, min, max, step, ...IProps } = inputProps || {};

@@ -45,8 +45,8 @@ export default ({
       onScroll={onScroll}
       options={{
         wheelPropagation: true,
-        suppressScrollY: suppressScrollY,
-        suppressScrollX: suppressScrollX,
+        suppressScrollY,
+        suppressScrollX,
       }}
     >
       {children}

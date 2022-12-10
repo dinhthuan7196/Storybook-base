@@ -39,6 +39,7 @@ type NumberInputProps = {
   prefix?: string;
   suffix?: string;
   thousandSeparator?: boolean;
+  allowDecimal?: boolean;
   onStep?: (value: unknown) => void;
 };
 
