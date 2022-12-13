@@ -7,12 +7,11 @@ import { PROGRESS_STATUS } from './constants';
 import { CellProps, ColumnProps } from './props';
 
 const Container = styled.div`
-  width: max-content;
   overflow: auto;
 `;
 
 const Table = styled.table`
-  padding: 2px;
+  width: max-content;
   border-collapse: separate;
   border-spacing: 0px;
 
@@ -36,15 +35,16 @@ const Row = styled.tr`
       cursor: default;
     }
     td {
-      /* background: ${themes.newColors.gray[200]}; */
+      background: ${themes.newColors.primary[50]};
     }
   }
 `;
 
 const Cell = styled.td<CellProps>`
-  max-width: ${({ width }) => (width ? `${width}px` : 'fit-content')};
-  width: ${({ width }) => (width ? `${width}px` : 'fit-content')};
+  max-width: ${({ width }) => `${width || 120}px`};
+  width: ${({ width }) => `${width || 120}px`};
   padding: 8px;
+  text-align: ${({ alignData }) => alignData || 'left'};
   background-color: ${({ status, disabled }) => {
     if (disabled) return themes.newColors.gray[50];
 
@@ -81,17 +81,22 @@ const Cell = styled.td<CellProps>`
       visibility: visible !important;
     }
   }
-  :focus,
+  :focus {
+    border: 1px solid ${themes.newColors.primary[500]};
+  }
   :focus-visible {
-    outline: 2px solid ${themes.newColors.primary[800]};
-    border-radius: 4px;
+    outline: 0px solid ${themes.newColors.primary[500]};
   }
 `;
 
-const Header = styled.th<ColumnProps>`
+const Header = styled.th<ColumnProps & { rowIndex: number }>`
   height: 43px;
   text-align: left;
   padding: 4px 8px;
+  max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}px` : 'unset')};
+  position: ${({ stickyLeft }) => (stickyLeft !== undefined ? 'sticky' : 'initial')};
+  top: ${({ stickyLeft, rowIndex }) => (stickyLeft !== undefined ? `${rowIndex * 43}px` : 'unset')};
+  left: ${({ stickyLeft }) => (stickyLeft !== undefined ? `${stickyLeft}px` : 'unset')};
   visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
   border-radius: ${({ borderRadiusTop }) => (borderRadiusTop ? '8px 8px 0px 0px' : 'none')};
   background-color: ${({ groupHeader, disabled }) =>

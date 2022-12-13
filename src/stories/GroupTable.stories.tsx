@@ -1,5 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import range from 'lodash/range';
+
 import GroupTable from '@components/GroupTable';
 import { ColumnProps } from '@components/GroupTable/props';
 
@@ -21,6 +23,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           variant: 'labelLarge',
           borderRadiusTop: true,
           rowSpan: 2,
+          width: 200,
         },
         {
           header: 'Overall Grade',
@@ -31,9 +34,13 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           columns: [
             {
               accessor: 'overall',
+              width: 60,
+              alignData: 'center',
             },
             {
               accessor: 'overallLetter',
+              width: 60,
+              alignData: 'center',
             },
           ],
         },
@@ -48,6 +55,8 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           header: '%',
           accessor: 'attendance',
           rowSpan: 2,
+          width: 120,
+          renderCell: ({ value }) => `${value} render cell`,
         },
       ],
     },
@@ -70,8 +79,10 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
       colSpan: 2,
       columns: [
         {
-          header: 'Assignment 1',
+          header: 'Assignment 1 2 3 4 5 6 7 8 9 0',
           variant: 'labelLarge',
+          maxWidth: 120,
+          isShowTooltip: true,
           columns: [
             {
               header: 'pt. out of 100',
@@ -85,7 +96,9 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           columns: [
             {
               header: 'pt. out of 100',
-              accessor: 'assignment_2',
+              accessor: 'assignment_2.value',
+              status: 'assignment_2.status',
+              width: 200,
             },
           ],
         },
@@ -110,7 +123,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
         {
           header: 'Homework 2',
           variant: 'labelLarge',
-          colSpan: 2,
+          colSpan: 3,
           columns: [
             {
               header: 'pt. out of 100',
@@ -126,57 +139,22 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
     },
   ];
 
-  const rows: Record<string, unknown>[] = [
-    {
-      id: 1,
-      name: 'Student 1',
-      overall: '89.9%',
-      overallLetter: 'A+',
-      attendance: '100',
-      participation: '69',
-      assignment_1: '100',
-      assignment_2: '',
-      homework_1: '100',
-      homework_2: '',
-      homework_3: '35',
+  const rows: Record<string, unknown>[] = range(1, 10).map((idx) => ({
+    id: idx,
+    name: `Student ${idx}`,
+    overall: `${idx}%`,
+    overallLetter: 'A+',
+    attendance: idx,
+    participation: idx,
+    assignment_1: idx,
+    assignment_2: {
+      value: idx % 3 === 0 ? idx : '',
+      status: -1,
     },
-    {
-      id: 2,
-      name: 'Student 2',
-      overall: '89.9%',
-      overallLetter: 'A+',
-      attendance: '100',
-      participation: '69',
-      assignment_1: '100',
-      assignment_2: '',
-      homework_1: '100',
-      homework_2: '',
-    },
-    {
-      id: 3,
-      name: 'Student 3',
-      overall: '89.9%',
-      overallLetter: 'A+',
-      attendance: '100',
-      participation: '69',
-      assignment_1: '100',
-      assignment_2: '',
-      homework_1: '100',
-      homework_2: '',
-    },
-    {
-      id: 4,
-      name: 'Student 4',
-      overall: '89.9%',
-      overallLetter: 'A+',
-      attendance: '100',
-      participation: '69',
-      assignment_1: '100',
-      assignment_2: '',
-      homework_1: '100',
-      homework_2: '',
-    },
-  ];
+    homework_1: idx,
+    homework_2: '',
+    homework_3: idx,
+  }));
 
   const handleEditCell = (cell: unknown) => {
     console.log('=== cell ===: ', cell);

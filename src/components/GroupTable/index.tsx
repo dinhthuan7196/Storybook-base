@@ -4,7 +4,7 @@ import get from 'lodash/get';
 
 import Cell from './components/Cell';
 import Header from './components/Header';
-import { getTableConfigs } from './helpers';
+import { FocusElementById, getTableConfigs } from './helpers';
 import { GroupTableProps, _CellProps } from './props';
 import { Container, Row, TBody, THead, Table } from './styles';
 
@@ -20,7 +20,7 @@ export default ({ columns, rows, handleEditCell }: GroupTableProps) => {
           {groupHeaders.map((row, idx) => (
             <Row key={`row-${idx}`}>
               {row.map((header, index) => (
-                <Header key={`header-${index}`} {...header} />
+                <Header key={`header-${index}`} rowIndex={idx} {...header} />
               ))}
             </Row>
           ))}
@@ -38,6 +38,7 @@ export default ({ columns, rows, handleEditCell }: GroupTableProps) => {
                     key={`cell-${tabIndex}`}
                     tabIndex={tabIndex}
                     cellInOtherRow={accessors.length}
+                    handleEditCell={handleEditCell}
                     cell={{
                       id: row?.id,
                       value,
@@ -53,15 +54,7 @@ export default ({ columns, rows, handleEditCell }: GroupTableProps) => {
           ))}
         </TBody>
       </Table>
-      <div
-        id={`cell-${tabIndex + 1}`}
-        tabIndex={tabIndex + 1}
-        onFocus={() => {
-          const firstItem = document.getElementById('cell-1');
-
-          firstItem?.focus();
-        }}
-      />
+      <div id={`cell-${tabIndex + 1}`} tabIndex={tabIndex + 1} onFocus={() => FocusElementById('cell-1')} />
     </Container>
   );
 };

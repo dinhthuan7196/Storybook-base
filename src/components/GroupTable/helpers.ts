@@ -18,6 +18,9 @@ const getTableConfigs = (cols: ColumnProps[]) => {
       alignData,
       width,
       header,
+      renderCell,
+      status,
+      stickyLeft,
       ...rest
     }: ColumnProps,
     idx: number,
@@ -31,8 +34,11 @@ const getTableConfigs = (cols: ColumnProps[]) => {
         isHoverShowAdornment,
         enableEdit,
         type,
+        status,
         alignData,
         width,
+        stickyLeft,
+        renderCell,
       });
     }
 
@@ -43,6 +49,7 @@ const getTableConfigs = (cols: ColumnProps[]) => {
           ...rest,
           disabled,
           header,
+          stickyLeft,
         },
       ];
     }
@@ -57,4 +64,10 @@ const getTableConfigs = (cols: ColumnProps[]) => {
   return { accessors, groupHeaders };
 };
 
-export { getTableConfigs };
+const FocusElementById = (id: string) => {
+  const element = document.getElementById(id);
+
+  element?.focus();
+};
+
+export { getTableConfigs, FocusElementById };

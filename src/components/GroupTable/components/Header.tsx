@@ -3,6 +3,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LockClockOutlinedIcon from '@mui/icons-material/LockClockOutlined';
 
 import Box from '@components/Box';
+import Tooltip from '@components/Tooltip';
 import Typography from '@components/Typography';
 
 import { ColumnProps } from '../props';
@@ -19,7 +20,13 @@ export default ({
   enableSort,
   description,
   disabled,
-}: ColumnProps) => {
+  stickyLeft,
+  rowIndex,
+  maxWidth,
+  isShowTooltip,
+}: ColumnProps & {
+  rowIndex: number;
+}) => {
   let children = (
     <Typography component='span' variant={variant || 'bodyMedium'}>
       {header}
@@ -44,9 +51,20 @@ export default ({
     );
   }
 
+  if (isShowTooltip) {
+    children = (
+      <Tooltip arrow title={header} placement='left'>
+        <Box className='ellipsis'>{children}</Box>
+      </Tooltip>
+    );
+  }
+
   return (
     <Header
-      className='ellipsis'
+      className={!isShowTooltip ? 'ellipsis' : ''}
+      maxWidth={maxWidth}
+      rowIndex={rowIndex}
+      stickyLeft={stickyLeft}
       isHidden={isHidden}
       borderRadiusTop={borderRadiusTop}
       groupHeader={groupHeader}

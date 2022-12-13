@@ -9,23 +9,11 @@ const PROGRESS_STATUS = {
   REJECTED: 5,
 };
 
-const OPTIONS_STATUS = [
-  {
-    label: 'Missing',
-    value: PROGRESS_STATUS.MISSING,
-  },
-  {
-    label: 'Missed',
-    value: PROGRESS_STATUS.MISSED,
-  },
-  {
-    label: 'Turned In',
-    value: PROGRESS_STATUS.TURN_IN,
-  },
-  {
-    label: 'Turned In (Late)',
-    value: PROGRESS_STATUS.LATE_TURN_IN,
-  },
-];
+const OPTIONS_STATUS = {
+  [PROGRESS_STATUS.MISSING]: 'Missing',
+  [PROGRESS_STATUS.MISSED]: 'Missed',
+  [PROGRESS_STATUS.TURN_IN]: 'Turned In',
+  [PROGRESS_STATUS.LATE_TURN_IN]: 'Turned In (Late)',
+};
 
 export { PROGRESS_STATUS, OPTIONS_STATUS };

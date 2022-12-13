@@ -23,6 +23,7 @@ import EmptyContent from './components/EmptyContent';
 import FormControl from './components/FormControl';
 import FullScreenDialog from './components/FullScreenDialog';
 import Grid from './components/Grid';
+import GroupTable from './components/GroupTable';
 import IconButton from './components/IconButton';
 import InputAdornment from './components/InputAdornment';
 import InputLabel from './components/InputLabel';
@@ -55,6 +56,7 @@ import LocalizationProvider from './styles/LocalizationProvider';
 import ThemeProvider from './styles/ThemeProvider';
 
 export {
+  GroupTable,
   EmptyContent,
   Tabs,
   Alert,
