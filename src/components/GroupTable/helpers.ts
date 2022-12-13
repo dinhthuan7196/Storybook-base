@@ -1,6 +1,9 @@
 import size from 'lodash/size';
 
-import { ColumnProps, _CellProps } from './props';
+import { themes } from '@styles/Themes';
+
+import { OPTIONS_STATUS, PROGRESS_STATUS } from './constants';
+import { CellProps, ColumnProps, _CellProps } from './props';
 
 const getTableConfigs = (cols: ColumnProps[]) => {
   const accessors: _CellProps[] = [];
@@ -13,14 +16,14 @@ const getTableConfigs = (cols: ColumnProps[]) => {
       disabled,
       endAdornment,
       isHoverShowAdornment,
-      enableEdit,
-      type,
+      disabledEdit,
       alignData,
       width,
       header,
       renderCell,
       status,
       stickyLeft,
+      inputType,
       ...rest
     }: ColumnProps,
     idx: number,
@@ -30,14 +33,14 @@ const getTableConfigs = (cols: ColumnProps[]) => {
       accessors.push({
         accessor,
         disabled: disabledFromParent || disabled,
-        endAdornment,
         isHoverShowAdornment,
-        enableEdit,
-        type,
+        disabledEdit,
         status,
         alignData,
         width,
         stickyLeft,
+        inputType,
+        endAdornment,
         renderCell,
       });
     }
@@ -70,4 +73,36 @@ const FocusElementById = (id: string) => {
   element?.focus();
 };
 
-export { getTableConfigs, FocusElementById };
+const renderBackground = ({ status, disabled }: CellProps) => {
+  if (disabled) return themes.newColors.gray[50];
+
+  switch (status) {
+    case PROGRESS_STATUS.MISSING:
+      return themes.newColors.red[50];
+    case PROGRESS_STATUS.MISSED:
+      return themes.newColors.gray[200];
+    case PROGRESS_STATUS.TURN_IN:
+      return themes.newColors.green[50];
+    case PROGRESS_STATUS.LATE_TURN_IN:
+      return themes.newColors.yellow[50];
+    default:
+      return '#FFF';
+  }
+};
+
+const renderColor = ({ status }: CellProps) => {
+  switch (status) {
+    case PROGRESS_STATUS.MISSING:
+      return themes.newColors.red[600];
+    case PROGRESS_STATUS.TURN_IN:
+      return themes.newColors.green[600];
+    case PROGRESS_STATUS.LATE_TURN_IN:
+      return themes.newColors.yellow[600];
+    default:
+      return themes.newColors.gray[800];
+  }
+};
+
+const optionStatus = Object.entries(OPTIONS_STATUS).map(([value, label]) => ({ value: parseInt(value), label }));
+
+export { getTableConfigs, FocusElementById, renderBackground, renderColor, optionStatus };

@@ -9,16 +9,16 @@ export type RenderCellProps = {
 };
 
 export type _CellProps = {
+  inputType?: 'text' | 'number';
   accessor?: string;
   disabled?: boolean;
   isHoverShowAdornment?: boolean;
-  enableEdit?: boolean;
-  type?: 'text' | 'input' | 'status';
+  disabledEdit?: boolean;
   alignData?: Aligns;
   width?: number;
   status?: number | string;
   stickyLeft?: number;
-  renderCell?: (values: RenderCellProps) => void;
+  renderCell?: (values: RenderCellProps) => React.ReactNode;
   endAdornment?: (values: RenderCellProps) => React.ReactNode;
 };
 

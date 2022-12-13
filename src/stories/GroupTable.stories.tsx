@@ -24,6 +24,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           borderRadiusTop: true,
           rowSpan: 2,
           width: 200,
+          endAdornment: () => <span>abc</span>,
         },
         {
           header: 'Overall Grade',
@@ -36,6 +37,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
               accessor: 'overall',
               width: 60,
               alignData: 'center',
+              disabledEdit: true,
             },
             {
               accessor: 'overallLetter',
@@ -98,6 +100,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
               header: 'pt. out of 100',
               accessor: 'assignment_2.value',
               status: 'assignment_2.status',
+              isHoverShowAdornment: true,
               width: 200,
             },
           ],
@@ -149,7 +152,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
     assignment_1: idx,
     assignment_2: {
       value: idx % 3 === 0 ? idx : '',
-      status: -1,
+      status: 3,
     },
     homework_1: idx,
     homework_2: '',

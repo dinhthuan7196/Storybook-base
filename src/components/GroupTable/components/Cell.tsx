@@ -1,15 +1,20 @@
-import { useMemo, useRef, useState } from 'react';
-// import ContentEditable from 'react-contenteditable';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import get from 'lodash/get';
 import set from 'lodash/set';
 
+import ArrowDown from '@mui/icons-material/KeyboardArrowDownRounded';
+import ArrowUp from '@mui/icons-material/KeyboardArrowUpRounded';
+
+import IconButton from '@components/IconButton';
+import MenuList from '@components/Menu/MenuList';
+import Popover from '@components/Popover';
 import Typography from '@components/Typography';
 
 import { OPTIONS_STATUS } from '../constants';
-import { FocusElementById } from '../helpers';
+import { FocusElementById, optionStatus } from '../helpers';
 import { CellProps } from '../props';
-import { BoxAdornment, Cell, FlexBox } from '../styles';
+import { BoxAdornment, Cell, FlexBox, Input, Option } from '../styles';
 
 type InitialValueProps = {
   id: string | number;
@@ -27,47 +32,44 @@ export default ({
   cellInOtherRow = 0,
   cell,
   alignData,
-  enableEdit,
+  disabledEdit,
   renderCell,
   endAdornment,
   handleEditCell = () => {},
 }: CellProps & { cell: InitialValueProps }) => {
-  const [editCell, setEditCell] = useState<boolean>(false);
-
-  const text = useRef('');
   const inputEl = useRef<HTMLInputElement>(null);
+
+  const [editCell, setEditCell] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const _value = get(cell, 'value');
   const _status = typeof status === 'string' ? get(cell, `row.${status}`) : status;
-  const _children = !_value && status !== undefined ? OPTIONS_STATUS[_status] : children;
+  const isOptions = !_value && status !== undefined;
+  const _children = isOptions ? OPTIONS_STATUS[_status] : children;
 
-  const renderContent = useMemo(() => {
-    let content = (
-      <Typography component='span' variant='bodyMedium'>
-        {_children || (!disabled && '--')}
-      </Typography>
+  const handleBlur = () => {
+    handleEditCell(inputEl?.current?.value);
+    if (editCell) setEditCell(false);
+  };
+
+  const handleChange = (value: any, path?: string) => {
+    set(inputEl, path || 'current.value', value);
+  };
+
+  useEffect(() => {
+    const isEmpty = !_value;
+
+    handleChange(
+      (isEmpty && status === undefined) || _children === undefined ? '--' : _children,
+      isEmpty ? 'current.placeholder' : undefined
     );
-
-    if (renderCell) {
-      content = <>{renderCell(cell)}</>;
-    }
-
-    if (endAdornment) {
-      content = (
-        <FlexBox>
-          {content}
-          <BoxAdornment className={isHoverShowAdornment ? 'endAdornment' : ''}>{endAdornment(cell)}</BoxAdornment>
-        </FlexBox>
-      );
-    }
-
-    return content;
-  }, [_children, disabled, cell, isHoverShowAdornment, endAdornment, renderCell]);
-
-  text.current = _value as string;
+  }, [_children, _value, status]);
 
   const handleKeyDown = (e: any) => {
-    e.preventDefault();
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Delete', 'Delete'].includes(e.code)) {
+      e.preventDefault();
+    }
+
     let cellIdx = tabIndex;
 
     switch (e.code) {
@@ -86,11 +88,16 @@ export default ({
         break;
       case 'Enter':
         if (!editCell) {
+          FocusElementById(`cell-input-${cellIdx}`);
           setEditCell(true);
         } else {
-          handleEditCell(cell);
+          FocusElementById(`cell-${cellIdx}`);
           setEditCell(false);
         }
+        break;
+      case 'Delete':
+      case 'Escape':
+        set(inputEl, 'current.value', null);
         break;
       default:
         break;
@@ -99,38 +106,78 @@ export default ({
     if (cellIdx !== tabIndex) FocusElementById(`cell-${cellIdx}`);
   };
 
-  const handleChange = (evt: any) => {
-    text.current = evt.target.value;
-  };
-
-  const handleBlur = () => {
-    console.log(inputEl?.current?.value);
-  };
+  const renderOptions = useMemo(
+    () => (
+      <Popover
+        keepMounted
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuList>
+          {optionStatus.map(({ label, value }) => (
+            <Option
+              status={value}
+              disableRipple
+              onClick={() => {
+                handleEditCell(value);
+                setAnchorEl(null);
+              }}
+            >
+              <Typography variant='bodyMedium'>{label}</Typography>
+            </Option>
+          ))}
+        </MenuList>
+      </Popover>
+    ),
+    [anchorEl]
+  );
 
   return (
-    <Cell
-      className='ellipsis'
-      id={`cell-${tabIndex}`}
-      tabIndex={tabIndex || 0}
-      width={width}
-      disabled={disabled}
-      alignData={alignData}
-      status={!_value ? _status : undefined}
-      // onKeyDown={handleKeyDown}
-      onBlur={() => {
-        // handleEditCell(cell);
-        // setEditCell(false);
-      }}
-    >
-      {/* <ContentEditable html={text.current} onKeyDown={handleKeyDown} onBlur={handleBlur} onChange={handleChange} /> */}
-      <input
-        ref={inputEl}
-        onBlur={handleBlur}
-        onChange={(e: any) => {
-          set(inputEl, 'current.value', e.target.value);
-          console.log({ inputEl, value: e.target.value });
-        }}
-      />
-    </Cell>
+    <>
+      {renderOptions}
+      <Cell
+        className='ellipsis'
+        id={`cell-${tabIndex}`}
+        tabIndex={tabIndex || 0}
+        width={width}
+        disabled={disabled}
+        alignData={alignData}
+        status={!_value ? _status : undefined}
+        onKeyDown={handleKeyDown}
+      >
+        <FlexBox>
+          <Input
+            autoComplete='off'
+            id={`cell-input-${tabIndex}`}
+            ref={inputEl}
+            status={!_value ? _status : undefined}
+            disabled={disabled || disabledEdit}
+            onBlur={handleBlur}
+            onChange={(e: any) => handleChange(e?.target?.value)}
+          />
+          {endAdornment && (
+            <BoxAdornment className={isHoverShowAdornment ? 'endAdornment' : ''} ml={0.75}>
+              {endAdornment(cell)}
+            </BoxAdornment>
+          )}
+          {!disabled && !disabledEdit && isOptions && (
+            <BoxAdornment className={isHoverShowAdornment ? 'endAdornment' : ''} ml={0.75}>
+              <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+                {anchorEl ? <ArrowUp fontSize='small' /> : <ArrowDown fontSize='small' />}
+              </IconButton>
+            </BoxAdornment>
+          )}
+        </FlexBox>
+      </Cell>
+    </>
   );
 };

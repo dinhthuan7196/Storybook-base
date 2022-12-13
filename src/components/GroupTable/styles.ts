@@ -1,9 +1,10 @@
 import Box from '@components/Box';
+import MenuItem from '@components/Menu/MenuItem';
 
 import { themes } from '@styles/Themes';
 import styled from 'styled-components';
 
-import { PROGRESS_STATUS } from './constants';
+import { renderBackground, renderColor } from './helpers';
 import { CellProps, ColumnProps } from './props';
 
 const Container = styled.div`
@@ -34,78 +35,59 @@ const Row = styled.tr`
     th {
       cursor: default;
     }
-    td {
+    td,
+    td > div > input {
       background: ${themes.newColors.primary[50]};
     }
   }
 `;
 
-const Cell = styled.td<CellProps>`
-  max-width: ${({ width }) => `${width || 120}px`};
-  width: ${({ width }) => `${width || 120}px`};
-  padding: 8px;
-  text-align: ${({ alignData }) => alignData || 'left'};
-  background-color: ${({ status, disabled }) => {
-    if (disabled) return themes.newColors.gray[50];
+const Cell = styled.td<CellProps>(({ width, alignData, status, disabled }) => ({
+  maxWidth: width || 120,
+  width: width || 120,
+  padding: '2px 6px',
+  textAlign: alignData || 'left',
+  backgroundColor: renderBackground({ status, disabled }),
+  color: renderColor({ status, disabled }),
+  '.endAdornment': {
+    visibility: 'hidden',
+  },
+  ':hover': {
+    '.endAdornment': {
+      visibility: 'visible',
+    },
+  },
+  ':focus': {
+    border: `1px solid ${themes.newColors.primary[500]}`,
+  },
+  ':focus-within': {
+    border: `1px solid ${themes.newColors.primary[500]}`,
+  },
+  ':focus-visible': {
+    outline: `0px solid ${themes.newColors.primary[500]}`,
+  },
+}));
 
-    switch (status) {
-      case PROGRESS_STATUS.MISSING:
-        return themes.newColors.red[50];
-      case PROGRESS_STATUS.MISSED:
-        return themes.newColors.gray[200];
-      case PROGRESS_STATUS.TURN_IN:
-        return themes.newColors.green[50];
-      case PROGRESS_STATUS.LATE_TURN_IN:
-        return themes.newColors.yellow[50];
-      default:
-        return '#FFF';
-    }
-  }};
-  color: ${({ status }) => {
-    switch (status) {
-      case PROGRESS_STATUS.MISSING:
-        return themes.newColors.red[600];
-      case PROGRESS_STATUS.TURN_IN:
-        return themes.newColors.green[600];
-      case PROGRESS_STATUS.LATE_TURN_IN:
-        return themes.newColors.yellow[600];
-      default:
-        return themes.newColors.gray[800];
-    }
-  }};
-  .endAdornment {
-    visibility: hidden !important;
-  }
-  :hover {
-    .endAdornment {
-      visibility: visible !important;
-    }
-  }
-  :focus {
-    border: 1px solid ${themes.newColors.primary[500]};
-  }
-  :focus-visible {
-    outline: 0px solid ${themes.newColors.primary[500]};
-  }
-`;
-
-const Header = styled.th<ColumnProps & { rowIndex: number }>`
-  height: 43px;
-  text-align: left;
-  padding: 4px 8px;
-  max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}px` : 'unset')};
-  position: ${({ stickyLeft }) => (stickyLeft !== undefined ? 'sticky' : 'initial')};
-  top: ${({ stickyLeft, rowIndex }) => (stickyLeft !== undefined ? `${rowIndex * 43}px` : 'unset')};
-  left: ${({ stickyLeft }) => (stickyLeft !== undefined ? `${stickyLeft}px` : 'unset')};
-  visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
-  border-radius: ${({ borderRadiusTop }) => (borderRadiusTop ? '8px 8px 0px 0px' : 'none')};
-  background-color: ${({ groupHeader, disabled }) =>
-    groupHeader ? (disabled ? themes.newColors.gray[200] : themes.newColors.gray[800]) : themes.newColors.gray[50]};
-  color: ${({ groupHeader, disabled }) =>
-    groupHeader ? (disabled ? themes.newColors.gray[600] : '#FFF') : themes.newColors.gray[800]};
-  border-top-color: ${({ borderRadiusTop }) =>
-    borderRadiusTop ? themes.newColors.gray[100] : 'transparent'} !important;
-`;
+const Header = styled.th<ColumnProps & { rowIndex: number }>(
+  ({ alignHeader, maxWidth, isHidden, borderRadiusTop, groupHeader, disabled, stickyLeft, rowIndex }) => ({
+    height: 43,
+    textAlign: alignHeader || 'left',
+    padding: '4px 8px',
+    maxWidth: maxWidth || 'unset',
+    visibility: isHidden ? 'hidden' : 'visible',
+    borderRadius: borderRadiusTop ? '8px 8px 0px 0px' : 'none',
+    backgroundColor: groupHeader
+      ? disabled
+        ? themes.newColors.gray[200]
+        : themes.newColors.gray[800]
+      : themes.newColors.gray[50],
+    color: groupHeader ? (disabled ? themes.newColors.gray[600] : '#FFF') : themes.newColors.gray[800],
+    borderTopColor: `${borderRadiusTop ? themes.newColors.gray[100] : 'transparent'} !important`,
+    position: stickyLeft !== undefined ? 'sticky' : 'initial',
+    top: stickyLeft !== undefined ? `${rowIndex * 43}px` : 'unset',
+    left: stickyLeft !== undefined ? `${stickyLeft}px` : 'unset',
+  })
+);
 
 const THead = styled.thead``;
 const TBody = styled.tbody``;
@@ -128,4 +110,31 @@ const BoxAdornment = styled(Box)`
   }
 `;
 
-export { BoxAdornment, Cell, Container, FlexBox, Header, Row, TBody, THead, Table };
+const Input = styled.input<CellProps>(({ status }) => ({
+  ...themes.typography.bodyMedium,
+  width: '100%',
+  border: 'none',
+  height: 30,
+  backgroundColor: renderBackground({ status }),
+  ':focus': {
+    '::placeholder ': {
+      color: 'transparent',
+    },
+  },
+  ':focus-visible': {
+    outline: 'none',
+  },
+  '::placeholder': {
+    color: renderColor({ status }),
+  },
+  ':disabled': {
+    color: themes.newColors.gray[800],
+  },
+}));
+
+const Option = styled(MenuItem)<{ status?: number }>(({ status }) => ({
+  backgroundColor: renderBackground({ status }),
+  color: renderColor({ status }),
+}));
+
+export { BoxAdornment, Cell, Container, FlexBox, Header, Row, TBody, THead, Table, Input, Option };
