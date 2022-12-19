@@ -1,9 +1,17 @@
+import { useState } from 'react';
+
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import isNaN from 'lodash/isNaN';
 import range from 'lodash/range';
+import set from 'lodash/set';
+
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 import GroupTable from '@components/GroupTable';
+import { PROGRESS_STATUS } from '@components/GroupTable/constants';
 import { ColumnProps } from '@components/GroupTable/props';
+import IconButton from '@components/IconButton';
 
 export default {
   title: 'GroupTable',
@@ -11,6 +19,30 @@ export default {
 } as ComponentMeta<typeof GroupTable>;
 
 export const Demo: ComponentStory<typeof GroupTable> = () => {
+  const [data, setData] = useState<Record<string, unknown>[]>(
+    range(1, 10).map((idx) => ({
+      id: idx,
+      name: `Student ${idx}`,
+      overall: idx,
+      overallLetter: 'A',
+      attendance: null,
+      participation: undefined,
+      assignment_1: idx,
+      assignment_2: {
+        value: idx % 4 === 0 ? idx : '',
+        status:
+          idx % 2 === 0
+            ? PROGRESS_STATUS.LATE_TURN_IN
+            : idx % 3 === 0
+            ? PROGRESS_STATUS.TURN_IN
+            : PROGRESS_STATUS.MISSING,
+      },
+      homework_1: idx,
+      homework_2: '',
+      homework_3: idx,
+    }))
+  );
+
   const columns: ColumnProps[] = [
     {
       header: '',
@@ -24,7 +56,11 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           borderRadiusTop: true,
           rowSpan: 2,
           width: 200,
-          endAdornment: () => <span>abc</span>,
+          endAdornment: () => (
+            <IconButton>
+              <DescriptionOutlinedIcon />
+            </IconButton>
+          ),
         },
         {
           header: 'Overall Grade',
@@ -35,13 +71,15 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           columns: [
             {
               accessor: 'overall',
-              width: 60,
-              alignData: 'center',
+              width: 40,
               disabledEdit: true,
+              alignData: 'center',
+              renderCell: ({ value }) => (value ? `${value}%` : ''),
             },
             {
               accessor: 'overallLetter',
-              width: 60,
+              width: 40,
+              disabledEdit: true,
               alignData: 'center',
             },
           ],
@@ -56,9 +94,13 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
         {
           header: '%',
           accessor: 'attendance',
+          inputType: 'number',
+          numberProps: {
+            decimalScale: 3,
+            thousandSeparator: true,
+          },
           rowSpan: 2,
           width: 120,
-          renderCell: ({ value }) => `${value} render cell`,
         },
       ],
     },
@@ -70,6 +112,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
         {
           header: '%',
           accessor: 'participation',
+          inputType: 'number',
           rowSpan: 2,
         },
       ],
@@ -89,6 +132,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
             {
               header: 'pt. out of 100',
               accessor: 'assignment_1',
+              inputType: 'number',
             },
           ],
         },
@@ -100,8 +144,21 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
               header: 'pt. out of 100',
               accessor: 'assignment_2.value',
               status: 'assignment_2.status',
+              inputType: 'number',
               isHoverShowAdornment: true,
               width: 200,
+              hiddenSelectStatus: () => false,
+              mappingOption: {
+                [PROGRESS_STATUS.LATE_TURN_IN]: {
+                  disabledMessage: 'aho aho aho',
+                  isDisabledOption: () => false,
+                },
+                [PROGRESS_STATUS.TURN_IN]: {
+                  label: 'PROGRESS STATUS TURN_IN =.=',
+                  disabledMessage: 'ahoooooooooooo',
+                  isDisabledOption: () => false,
+                },
+              },
             },
           ],
         },
@@ -112,6 +169,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
       borderRadiusTop: true,
       groupHeader: true,
       colSpan: 3,
+      disabled: true,
       columns: [
         {
           header: 'Homework 1',
@@ -120,6 +178,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
             {
               header: 'pt. out of 100',
               accessor: 'homework_1',
+              inputType: 'number',
             },
           ],
         },
@@ -131,10 +190,12 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
             {
               header: 'pt. out of 100',
               accessor: 'homework_2',
+              inputType: 'number',
             },
             {
               header: 'pt. out of 3333',
               accessor: 'homework_3',
+              inputType: 'number',
             },
           ],
         },
@@ -142,26 +203,18 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
     },
   ];
 
-  const rows: Record<string, unknown>[] = range(1, 10).map((idx) => ({
-    id: idx,
-    name: `Student ${idx}`,
-    overall: `${idx}%`,
-    overallLetter: 'A+',
-    attendance: idx,
-    participation: idx,
-    assignment_1: idx,
-    assignment_2: {
-      value: idx % 3 === 0 ? idx : '',
-      status: 3,
-    },
-    homework_1: idx,
-    homework_2: '',
-    homework_3: idx,
-  }));
+  const handleEditCell = ({ accessor, rowInfo, value }: any) => {
+    if (!isNaN(value) && value !== rowInfo?.row?.value)
+      setData((prevData: Record<string, any>[]) =>
+        prevData.map((_data: Record<string, any>) => {
+          if (_data?.id === rowInfo?.id) {
+            return set(_data, accessor, value);
+          }
 
-  const handleEditCell = (cell: unknown) => {
-    console.log('=== cell ===: ', cell);
+          return _data;
+        })
+      );
   };
 
-  return <GroupTable columns={columns} rows={rows} handleEditCell={handleEditCell} />;
+  return <GroupTable columns={columns} rows={data} handleEditCell={handleEditCell} />;
 };

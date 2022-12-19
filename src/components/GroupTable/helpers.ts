@@ -3,7 +3,13 @@ import size from 'lodash/size';
 import { themes } from '@styles/Themes';
 
 import { OPTIONS_STATUS, PROGRESS_STATUS } from './constants';
-import { CellProps, ColumnProps, _CellProps } from './props';
+import { CellProps, ColumnProps, MappingOptionProps, _CellProps } from './props';
+
+const isValidValue = (value: any) => {
+  if (!value || value === undefined || value === null) return false;
+
+  return true;
+};
 
 const getTableConfigs = (cols: ColumnProps[]) => {
   const accessors: _CellProps[] = [];
@@ -14,16 +20,19 @@ const getTableConfigs = (cols: ColumnProps[]) => {
       accessor,
       columns,
       disabled,
-      endAdornment,
       isHoverShowAdornment,
       disabledEdit,
       alignData,
       width,
       header,
-      renderCell,
       status,
       stickyLeft,
       inputType,
+      maxLength,
+      mappingOption,
+      hiddenSelectStatus,
+      endAdornment,
+      renderCell,
       ...rest
     }: ColumnProps,
     idx: number,
@@ -40,8 +49,11 @@ const getTableConfigs = (cols: ColumnProps[]) => {
         width,
         stickyLeft,
         inputType,
-        endAdornment,
+        maxLength,
+        mappingOption,
+        hiddenSelectStatus,
         renderCell,
+        endAdornment,
       });
     }
 
@@ -67,13 +79,8 @@ const getTableConfigs = (cols: ColumnProps[]) => {
   return { accessors, groupHeaders };
 };
 
-const FocusElementById = (id: string) => {
-  const element = document.getElementById(id);
-
-  element?.focus();
-};
-
-const renderBackground = ({ status, disabled }: CellProps) => {
+const renderBackground = ({ status, disabled, disabledEdit }: CellProps) => {
+  if (disabledEdit) return 'white';
   if (disabled) return themes.newColors.gray[50];
 
   switch (status) {
@@ -86,7 +93,7 @@ const renderBackground = ({ status, disabled }: CellProps) => {
     case PROGRESS_STATUS.LATE_TURN_IN:
       return themes.newColors.yellow[50];
     default:
-      return '#FFF';
+      return 'white';
   }
 };
 
@@ -103,6 +110,88 @@ const renderColor = ({ status }: CellProps) => {
   }
 };
 
-const optionStatus = Object.entries(OPTIONS_STATUS).map(([value, label]) => ({ value: parseInt(value), label }));
+const CreateResizableColumn = (col: HTMLTableCellElement, divResize: HTMLDivElement) => {
+  let x = 0;
+  let w = 0;
 
-export { getTableConfigs, FocusElementById, renderBackground, renderColor, optionStatus };
+  const mouseDownHandler = (e: MouseEvent) => {
+    x = e.clientX;
+    const styles = window.getComputedStyle(col);
+
+    w = parseInt(styles.width, 10);
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+
+    divResize.classList.add('resizing');
+  };
+
+  const mouseMoveHandler = (e: MouseEvent) => {
+    const dx = e.clientX - x;
+
+    col.style.width = `${w + dx}px`;
+    divResize.classList.remove('resizing');
+  };
+
+  const mouseUpHandler = () => {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+  };
+
+  divResize.addEventListener('mousedown', mouseDownHandler);
+};
+
+const focusElementById = (id: string) => {
+  const element = document.getElementById(id);
+
+  element?.focus();
+};
+
+const formatStringToNumber = (value: string) => parseFloat(value.replaceAll(',', ''));
+
+const formatNumberToString = (value: string, options: _CellProps['numberProps']) => {
+  const { min, max, decimalScale, thousandSeparator, allowNegative = false } = options || {};
+
+  let _value = value;
+
+  if (!allowNegative) {
+    _value = _value.replace('-', '');
+  }
+
+  if (!isValidValue(_value)) return _value;
+
+  let number = formatStringToNumber(_value);
+
+  if (min !== undefined && number < min) {
+    number = min;
+  }
+
+  if (max !== undefined && number > max) {
+    number = max;
+  }
+
+  if (thousandSeparator) {
+    return number.toLocaleString('en-US', { maximumFractionDigits: decimalScale !== undefined ? decimalScale : 2 });
+  }
+
+  return number.toString();
+};
+
+const optionStatus = Object.entries(OPTIONS_STATUS)
+  .filter(([value]) => parseInt(value) !== PROGRESS_STATUS.MISSED)
+  .map(([value, label]) => ({ value: parseInt(value), label }));
+
+const getLabelOption = (label: string, mapping?: MappingOptionProps) => mapping?.label ?? label;
+
+export {
+  getTableConfigs,
+  getLabelOption,
+  focusElementById,
+  renderBackground,
+  renderColor,
+  CreateResizableColumn,
+  formatNumberToString,
+  formatStringToNumber,
+  isValidValue,
+  optionStatus,
+};

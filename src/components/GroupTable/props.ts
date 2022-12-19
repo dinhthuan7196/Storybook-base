@@ -8,6 +8,12 @@ export type RenderCellProps = {
   row: Record<string, any>;
 };
 
+export type MappingOptionProps = {
+  label?: string;
+  disabledMessage?: string;
+  isDisabledOption?: (values: RenderCellProps) => boolean;
+};
+
 export type _CellProps = {
   inputType?: 'text' | 'number';
   accessor?: string;
@@ -17,8 +23,18 @@ export type _CellProps = {
   alignData?: Aligns;
   width?: number;
   status?: number | string;
+  hiddenSelectStatus?: (values: RenderCellProps) => boolean;
   stickyLeft?: number;
-  renderCell?: (values: RenderCellProps) => React.ReactNode;
+  maxLength?: number;
+  mappingOption?: Record<number, MappingOptionProps>;
+  numberProps?: {
+    min?: number;
+    max?: number;
+    decimalScale?: number;
+    thousandSeparator?: boolean;
+    allowNegative?: boolean;
+  };
+  renderCell?: (values: RenderCellProps) => string;
   endAdornment?: (values: RenderCellProps) => React.ReactNode;
 };
 
@@ -45,7 +61,12 @@ export type CellProps = _CellProps & {
   handleEditCell?: (values: unknown) => void;
 };
 
-export type GroupTableProps = {
+export type EmptyPageProps = {
+  emptyContent?: string;
+  loading?: boolean;
+};
+
+export type GroupTableProps = EmptyPageProps & {
   columns: ColumnProps[];
   rows: Record<string, any>[];
   handleEditCell?: (values: unknown) => void;

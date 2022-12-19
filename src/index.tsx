@@ -9,6 +9,7 @@ import CardActions from './components/Card/CardActions';
 import CardContent from './components/Card/CardContent';
 import CardHeader from './components/Card/CardHeader';
 import CardMedia from './components/Card/CardMedia';
+import CardAttachment from './components/CardAttachment';
 import Checkbox from './components/Checkbox';
 import Chip from './components/Chip';
 import ClickAwayListener from './components/ClickAwayListener';
@@ -45,6 +46,7 @@ import Popper from './components/Popper';
 import Radio from './components/Radio';
 import Skeleton from './components/Skeleton';
 import SplitButton from './components/SplitButton';
+import StudentTasks from './components/StudentPage/Tasks';
 import Switch from './components/Switch';
 import Table from './components/Table';
 import Tabs from './components/Tabs';
@@ -56,6 +58,8 @@ import LocalizationProvider from './styles/LocalizationProvider';
 import ThemeProvider from './styles/ThemeProvider';
 
 export {
+  StudentTasks,
+  CardAttachment,
   GroupTable,
   EmptyContent,
   Tabs,

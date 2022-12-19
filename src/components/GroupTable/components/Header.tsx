@@ -53,7 +53,7 @@ export default ({
 
   if (isShowTooltip) {
     children = (
-      <Tooltip arrow title={header} placement='left'>
+      <Tooltip arrow title={header} placement='top'>
         <Box className='ellipsis'>{children}</Box>
       </Tooltip>
     );

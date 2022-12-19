@@ -1,3 +1,5 @@
+import { forwardRef } from 'react';
+
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 
@@ -9,4 +11,4 @@ const StyledMenuItem = styled(MenuItem)(({ theme }: Record<string, any>) => ({
   padding: theme.spacing(1),
 }));
 
-export default (props: MenuItemProps) => <StyledMenuItem {...props} />;
+export default forwardRef<HTMLLIElement, MenuItemProps>((props, ref) => <StyledMenuItem ref={ref} {...props} />);

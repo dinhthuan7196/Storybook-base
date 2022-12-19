@@ -16,12 +16,27 @@ const Table = styled.table`
   border-collapse: separate;
   border-spacing: 0px;
 
+  th {
+    position: relative;
+  }
   td,
   th {
     border: 1px solid ${themes.newColors.gray[100]};
     border-top-color: transparent;
   }
 
+  .resizer:hover,
+  .resizing {
+    border-right: 1px solid blue;
+  }
+  .resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    user-select: none;
+    cursor: col-resize;
+  }
   .ellipsis {
     white-space: nowrap;
     overflow: hidden;
@@ -42,11 +57,10 @@ const Row = styled.tr`
   }
 `;
 
-const Cell = styled.td<CellProps>(({ width, alignData, status, disabled }) => ({
+const Cell = styled.td<CellProps>(({ width, status, disabled }) => ({
   maxWidth: width || 120,
   width: width || 120,
   padding: '2px 6px',
-  textAlign: alignData || 'left',
   backgroundColor: renderBackground({ status, disabled }),
   color: renderColor({ status, disabled }),
   '.endAdornment': {
@@ -110,25 +124,38 @@ const BoxAdornment = styled(Box)`
   }
 `;
 
-const Input = styled.input<CellProps>(({ status }) => ({
+const Input = styled.input<CellProps>(({ status, alignData, disabled, disabledEdit }) => ({
   ...themes.typography.bodyMedium,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
   width: '100%',
   border: 'none',
   height: 30,
+  textAlign: alignData || 'left',
   backgroundColor: renderBackground({ status }),
   ':focus': {
     '::placeholder ': {
       color: 'transparent',
     },
   },
-  ':focus-visible': {
-    outline: 'none',
-  },
   '::placeholder': {
     color: renderColor({ status }),
   },
+  ':focus-visible': {
+    outline: 'none',
+  },
   ':disabled': {
+    backgroundColor: renderBackground({ disabled, disabledEdit }),
     color: themes.newColors.gray[800],
+  },
+  '::-webkit-outer-spin-button': {
+    margin: 0,
+    '-webkit-appearance': 'none',
+  },
+  '::-webkit-inner-spin-button': {
+    margin: 0,
+    '-webkit-appearance': 'none',
   },
 }));
 
@@ -137,4 +164,20 @@ const Option = styled(MenuItem)<{ status?: number }>(({ status }) => ({
   color: renderColor({ status }),
 }));
 
-export { BoxAdornment, Cell, Container, FlexBox, Header, Row, TBody, THead, Table, Input, Option };
+const EmptyPage = styled(Box)(() => ({
+  width: '100%',
+  height: 350,
+  borderRadius: 8,
+  border: `1px solid ${themes.newColors.gray[100]}`,
+  backgroundColor: 'white',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  alignContent: 'stretch',
+
+  '.MuiCircularProgress-root': {
+    color: themes.newColors.gray[400],
+  },
+}));
+
+export { BoxAdornment, Cell, Container, FlexBox, Header, Row, TBody, THead, Table, Input, Option, EmptyPage };
