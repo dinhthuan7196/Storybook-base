@@ -46,7 +46,7 @@ import Popper from './components/Popper';
 import Radio from './components/Radio';
 import Skeleton from './components/Skeleton';
 import SplitButton from './components/SplitButton';
-import StudentTasks from './components/StudentPage/Tasks';
+import StudentTasks from './components/StudentTasks';
 import Switch from './components/Switch';
 import Table from './components/Table';
 import Tabs from './components/Tabs';

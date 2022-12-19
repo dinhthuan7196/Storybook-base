@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { Tabs } from '../constants';
+import { Tabs } from './constants';
 
 export type ScheduleProps = {
   label?: string;
@@ -42,10 +42,11 @@ export type CardProps = Record<string, any> & {
   renderFooter?: (value: any) => void;
 };
 
-export type TasksProps = {
+export type StudentTasksProps = {
   className?: string;
   title?: string;
   subTitle?: string;
+  maxHeight?: number | string;
   tabLabelMapping?: { [P in keyof typeof Tabs]?: string };
   groupByData?: {
     label?: string;
