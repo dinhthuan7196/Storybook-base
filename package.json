@@ -1,6 +1,6 @@
 {
   "name": "demo-components-ui",
-  "version": "1.2.29",
+  "version": "1.2.49",
   "author": {
     "name": "Thuan Dinh"
   },
@@ -90,6 +90,7 @@
     "glob": "^8.0.3",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
+    "react-contenteditable": "^3.3.6",
     "react-table": "^7.8.0",
     "rollup": "^2.79.0",
     "rollup-plugin-delete": "^2.0.0",

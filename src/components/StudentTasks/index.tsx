@@ -1,32 +1,70 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 import Box from '@components/Box';
 import Tabs from '@components/Tabs';
 import Typography from '@components/Typography';
 
-import Tasks from './Components/Tasks';
+import CardList from './Components/CardList';
 import { Tabs as _Tabs } from './constants';
-import { StudentTasksProps } from './props';
-import { SubTitle } from './styles';
+import { GlobalContext } from './GlobalContext';
+import { DataByTabProps, GroupDataProps, StudentTasksProps, TypeofTabs } from './props';
 
-export default ({ title, spacing, subTitle, className }: StudentTasksProps) => {
-  const tabList = useMemo(() => Object.keys(_Tabs), []);
+export default memo(
+  ({
+    title,
+    data,
+    loading,
+    spacing,
+    className,
+    labelMapping,
+    maxHeight,
+    emptyContent,
+    variantTitle,
+    disableSelectTab,
+    customCardFooter,
+    onClickCard,
+    onClickMenu,
+    onClickSchedule,
+    onClickTab = () => {},
+  }: StudentTasksProps) => {
+    const tabList = useMemo(() => Object.keys(_Tabs), []);
 
-  return (
-    <Box className={className} {...spacing}>
-      <Typography component='div' variant='headingSmall' sx={{ mb: 1 }}>
-        {title}
-      </Typography>
-      <SubTitle component='div' variant='titleMedium'>
-        {subTitle}
-      </SubTitle>
-      <Tabs
-        divider
-        tabs={tabList.map((tab) => ({
-          label: _Tabs[tab as keyof typeof _Tabs],
-          content: <Tasks />,
-        }))}
-      />
-    </Box>
-  );
-};
+    return (
+      <GlobalContext.Provider
+        value={{
+          labelMapping,
+          maxHeight,
+          emptyContent,
+          loading,
+          customCardFooter,
+          onClickCard,
+          onClickMenu,
+          onClickSchedule,
+        }}
+      >
+        <Box className={className} {...spacing}>
+          <Typography component='div' variant={variantTitle || 'headingSmall'} sx={{ mb: 2 }}>
+            {title}
+          </Typography>
+          {!disableSelectTab ? (
+            <Tabs
+              divider
+              handleChangeTab={(tab) => onClickTab(tab)}
+              tabs={tabList.map((tab) => {
+                const _tab = tab as TypeofTabs;
+
+                return {
+                  key: tab,
+                  label: labelMapping?.[_tab] ?? _Tabs[_tab],
+                  content: <CardList data={(data as DataByTabProps)?.[_tab] ?? (data as GroupDataProps[])} />,
+                };
+              })}
+            />
+          ) : (
+            <CardList data={data as GroupDataProps[]} />
+          )}
+        </Box>
+      </GlobalContext.Provider>
+    );
+  }
+);

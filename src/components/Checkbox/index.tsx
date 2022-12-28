@@ -2,7 +2,7 @@ import { FC, SyntheticEvent } from 'react';
 
 import { withStyles } from 'tss-react/mui';
 
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import MCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import SvgIcon from '@mui/material/SvgIcon';
 
@@ -15,9 +15,9 @@ import { ReactComponent as CheckboxUnselected } from '../../assets/images/icn_ch
 import { CheckboxLabelProps } from './props';
 import styles from './styles';
 
-const MyCheckbox: FC<CheckboxProps> = withStyles(
+export const Checkbox: FC<CheckboxProps> = withStyles(
   (props) => (
-    <Checkbox
+    <MCheckbox
       disableRipple
       checkedIcon={<SvgIcon component={CheckboxSelected} />}
       indeterminateIcon={<SvgIcon component={CheckboxIndeterminate} />}
@@ -30,7 +30,7 @@ const MyCheckbox: FC<CheckboxProps> = withStyles(
 
 export default ({ label, indeterminate, onChange, ...rest }: CheckboxLabelProps) => (
   <FormControlLabel
-    control={<MyCheckbox indeterminate={indeterminate} />}
+    control={<Checkbox indeterminate={indeterminate} />}
     label={<Typography variant='bodyMedium'>{label}</Typography>}
     onChange={(event: SyntheticEvent, checked: boolean) => !!onChange && onChange(checked)}
     {...rest}

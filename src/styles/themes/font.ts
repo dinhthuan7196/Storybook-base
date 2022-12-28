@@ -15,7 +15,7 @@ const fontSize = {
 
 const fontSizeIcon = {
   xSmall: '12px',
-  small: '15px',
+  small: '16px',
   normal: '20px',
   medium: '24px',
 };

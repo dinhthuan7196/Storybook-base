@@ -16,6 +16,7 @@ const CardAttachment = styled(Paper)(({ theme }: Record<string, any>) => ({
   borderRadius: theme.spacing(1),
   borderWidth: theme.spacing(0.125),
   borderColor: theme.newColors.gray[200],
+  cursor: 'pointer',
 }));
 
 const EllipsisBox = styled(Box)(() => ({
@@ -32,20 +33,29 @@ const GroupTitle = styled(EllipsisBox)(({ theme }: Record<string, any>) => ({
     ':last-child': {
       color: theme.newColors.gray[400],
     },
-    ':hover': {
-      cursor: 'default',
-    },
   },
 }));
 
 const LeftBox = styled(EllipsisBox)(({ theme }: Record<string, any>) => ({
   ...FlexBox,
   marginRight: 16,
-  '.MuiSvgIcon-root': {
-    color: theme.newColors.gray[600],
-  },
   '.MuiDivider-root': {
     borderColor: theme.newColors.gray[200],
+  },
+  ' svg.MuiSvgIcon-root': {
+    fontSize: theme.fontSizeIcon.normal,
+    path: {
+      fill: theme.newColors.gray[800],
+    },
+  },
+  ' svg[id*="icn"]': {
+    width: theme.spacing(4.25),
+    path: {
+      fill: theme.newColors.gray[800],
+    },
+  },
+  ' .google-icon': {
+    margin: theme.spacing(0, 0.25),
   },
 }));
 

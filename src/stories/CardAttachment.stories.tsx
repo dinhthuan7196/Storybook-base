@@ -12,7 +12,7 @@ export default {
 export const Demo: ComponentStory<typeof CardAttachment> = (args: CardAttachmentProps) => <CardAttachment {...args} />;
 
 Demo.args = {
-  icon: 'video',
+  icon: 'lesson',
   title:
     'Assignment 1: Loren hahahaha Assignment 1: Loren hahahaha Assignment 1: Loren hahahaha Assignment 1: Loren hahahaha Assignment 1: Loren hahahaha',
   subTitle:

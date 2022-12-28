@@ -1,25 +1,25 @@
 import size from 'lodash/size';
 
-import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { styled } from '@mui/material/styles';
 
 import { useAutocomplete } from '@mui/base/AutocompleteUnstyled';
 
-import CheckIcon from '@mui/icons-material/Check';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 
+import { Checkbox } from '@components/Checkbox';
 import Chip from '@components/Chip';
 import ListItemIcon from '@components/List/ListItemIcon';
 import ListItemText from '@components/List/ListItemText';
 import MenuItem from '@components/Menu/MenuItem';
 import MenuList from '@components/Menu/MenuList';
 import Paper from '@components/Paper';
-import TextField from '@components/TextField';
 
 const InputWrapper = styled('div')(
   ({ theme }) => `
   border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
   background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
   border-radius: 8px;
+  min-height: 40px;
   padding: 2px;
   display: flex;
   flex-wrap: wrap;
@@ -48,53 +48,13 @@ const InputWrapper = styled('div')(
 `
 );
 
-const Listbox = styled('ul')(
-  ({ theme }) => `
-  margin: 2px 0 0;
-  padding: 0;
-  position: absolute;
-  list-style: none;
-  background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
-  overflow: auto;
-  max-height: 250px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 1;
-
-  & li {
-    padding: 5px 12px;
-    display: flex;
-
-    & span {
-      flex-grow: 1;
-    }
-
-    & svg {
-      color: transparent;
-    }
-  }
-
-  & li[aria-selected='true'] {
-    background-color: ${theme.palette.mode === 'dark' ? '#2b2b2b' : '#fafafa'};
-    font-weight: 600;
-
-    & svg {
-      color: #1890ff;
-    }
-  }
-
-  & li.${autocompleteClasses.focused} {
-    background-color: ${theme.palette.mode === 'dark' ? '#003b57' : '#e6f7ff'};
-    cursor: pointer;
-
-    & svg {
-      color: currentColor;
-    }
-  }
-`
-);
-
-export default function CustomizedHook() {
+export default function CustomizedHook({
+  disableCloseOnSelect,
+  multiple,
+}: {
+  disableCloseOnSelect?: boolean;
+  multiple?: boolean;
+}) {
   const {
     getRootProps,
     // getInputLabelProps,
@@ -106,48 +66,65 @@ export default function CustomizedHook() {
     value,
     focused,
     setAnchorEl,
-    anchorEl,
+    // anchorEl,
   } = useAutocomplete({
-    defaultValue: [top100Films[1]],
-    multiple: true,
+    defaultValue: multiple ? [top100Films[1]] : top100Films[1],
+    multiple,
     options: top100Films,
     getOptionLabel: (option) => option.title,
-    disableCloseOnSelect: true,
+    disableCloseOnSelect,
   });
 
-  const { onClick, ...rest } = getRootProps() || {};
-
-  console.log('==anchorEl', anchorEl);
-
   return (
-    <>
-      <div onClick={onClick} {...rest}>
-        <TextField label='Testing' fullWidth sx={{ my: 5 }} />
-      </div>
-
-      <div onClick={onClick} {...rest}>
-        <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {value.map((option: FilmOptionType, index: number) => (
+    <div style={{ width: 300 }} {...getRootProps()}>
+      <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
+        {multiple &&
+          (value as FilmOptionType[]).map((option: FilmOptionType, index: number) => (
             <Chip sx={{ m: 0.5 }} label={option.title} status='suspended' size='small' {...getTagProps({ index })} />
           ))}
-          <input {...getInputProps()} />
-        </InputWrapper>
-      </div>
+        <input {...getInputProps()} />
+      </InputWrapper>
       {!!size(groupedOptions) && (
-        <Paper>
+        <Paper
+          sx={{
+            mt: 1,
+            maxHeight: 350,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            '::-webkit-scrollbar': {
+              width: 5,
+            },
+            '::-webkit-scrollbar-thumb': {
+              borderRadius: 8,
+              backgroundColor: '#D1D5DB',
+            },
+          }}
+        >
           <MenuList {...getListboxProps()}>
-            {(groupedOptions as typeof top100Films).map((option, index) => (
-              <MenuItem {...getOptionProps({ option, index })}>
-                <ListItemText>{option.title}</ListItemText>
-                <ListItemIcon>
-                  <CheckIcon fontSize='small' />
+            {(top100Films as typeof top100Films).map((option, index) => (
+              <MenuItem selected disabled={index % 3 === 0} {...getOptionProps({ option, index })}>
+                <Checkbox style={{ paddingLeft: 0 }} checked />
+                <ListItemText
+                  sx={{
+                    span: {
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    },
+                    overflow: 'hidden',
+                  }}
+                >
+                  {option.title}
+                </ListItemText>
+                <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                  <CheckRoundedIcon color='secondary' />
                 </ListItemIcon>
               </MenuItem>
             ))}
           </MenuList>
         </Paper>
       )}
-    </>
+    </div>
   );
 }
 

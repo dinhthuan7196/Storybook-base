@@ -141,10 +141,18 @@ const CreateResizableColumn = (col: HTMLTableCellElement, divResize: HTMLDivElem
   divResize.addEventListener('mousedown', mouseDownHandler);
 };
 
-const focusElementById = (id: string) => {
-  const element = document.getElementById(id);
+const focusElementById = (goToElement: string, currentElement?: string) => {
+  const element = (id: string) => document.getElementById(id);
 
-  element?.focus();
+  const getElement = element(goToElement);
+
+  if (getElement) {
+    getElement.focus();
+  } else if (currentElement) {
+    const getElement = element(currentElement);
+
+    getElement?.focus();
+  }
 };
 
 const formatStringToNumber = (value: string) => parseFloat(value.replaceAll(',', ''));
@@ -179,7 +187,7 @@ const formatNumberToString = (value: string, options: _CellProps['numberProps'])
 
 const optionStatus = Object.entries(OPTIONS_STATUS)
   .filter(([value]) => parseInt(value) !== PROGRESS_STATUS.MISSED)
-  .map(([value, label]) => ({ value: parseInt(value), label }));
+  .map(([value, option]) => ({ value: parseInt(value), ...option }));
 
 const getLabelOption = (label: string, mapping?: MappingOptionProps) => mapping?.label ?? label;
 

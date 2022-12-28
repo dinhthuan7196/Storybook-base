@@ -1,5 +1,6 @@
 import Box from '@components/Box';
 import MenuItem from '@components/Menu/MenuItem';
+import Typography from '@components/Typography';
 
 import { themes } from '@styles/Themes';
 import styled from 'styled-components';
@@ -16,13 +17,18 @@ const Table = styled.table`
   border-collapse: separate;
   border-spacing: 0px;
 
-  th {
-    position: relative;
-  }
   td,
   th {
     border: 1px solid ${themes.newColors.gray[100]};
     border-top-color: transparent;
+  }
+
+  th {
+    position: relative;
+  }
+
+  thead > tr:first-of-type > th {
+    border-top-color: ${themes.newColors.gray[100]};
   }
 
   .resizer:hover,
@@ -89,17 +95,16 @@ const Header = styled.th<ColumnProps & { rowIndex: number }>(
     padding: '4px 8px',
     maxWidth: maxWidth || 'unset',
     visibility: isHidden ? 'hidden' : 'visible',
-    borderRadius: borderRadiusTop ? '8px 8px 0px 0px' : 'none',
+    borderRadius: borderRadiusTop ? '8px 8px 0px 0px' : 'unset',
     backgroundColor: groupHeader
       ? disabled
         ? themes.newColors.gray[200]
         : themes.newColors.gray[800]
       : themes.newColors.gray[50],
     color: groupHeader ? (disabled ? themes.newColors.gray[600] : '#FFF') : themes.newColors.gray[800],
-    borderTopColor: `${borderRadiusTop ? themes.newColors.gray[100] : 'transparent'} !important`,
-    position: stickyLeft !== undefined ? 'sticky' : 'initial',
-    top: stickyLeft !== undefined ? `${rowIndex * 43}px` : 'unset',
-    left: stickyLeft !== undefined ? `${stickyLeft}px` : 'unset',
+    // position: stickyLeft !== undefined ? 'sticky' : 'initial',
+    // top: stickyLeft !== undefined ? `${rowIndex * 43}px` : 'unset',
+    // left: stickyLeft !== undefined ? `${stickyLeft}px` : 'unset',
   })
 );
 
@@ -162,6 +167,13 @@ const Input = styled.input<CellProps>(({ status, alignData, disabled, disabledEd
 const Option = styled(MenuItem)<{ status?: number }>(({ status }) => ({
   backgroundColor: renderBackground({ status }),
   color: renderColor({ status }),
+  justifyContent: 'space-between',
+}));
+
+const HotKey = styled(Typography)(() => ({
+  marginLeft: 16,
+  marginRight: 4,
+  color: themes.newColors.gray[400],
 }));
 
 const EmptyPage = styled(Box)(() => ({
@@ -180,4 +192,4 @@ const EmptyPage = styled(Box)(() => ({
   },
 }));
 
-export { BoxAdornment, Cell, Container, FlexBox, Header, Row, TBody, THead, Table, Input, Option, EmptyPage };
+export { BoxAdornment, Cell, Container, FlexBox, Header, Row, TBody, THead, Table, Input, Option, EmptyPage, HotKey };

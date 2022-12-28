@@ -57,7 +57,7 @@ export const Demo: ComponentStory<typeof GroupTable> = () => {
           rowSpan: 2,
           width: 200,
           endAdornment: () => (
-            <IconButton>
+            <IconButton onClick={() => alert("Don't touch my babe")}>
               <DescriptionOutlinedIcon />
             </IconButton>
           ),

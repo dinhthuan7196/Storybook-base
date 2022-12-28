@@ -1,6 +1,7 @@
 import { SxProps, Theme } from '@mui/system';
 
 export type Tab = {
+  key?: any;
   content?: React.ReactNode;
   label?: React.ReactNode;
   disabled?: boolean;
@@ -17,9 +18,9 @@ export type TabsProps = {
   defaultTab?: number;
   scrollButtons?: boolean;
   divider?: boolean;
-  handleChangeTab?: (tab: number) => void;
   height?: number | string;
   width?: number | string;
+  handleChangeTab?: (tab?: any) => void;
 };
 
 export interface TabPanelProps {

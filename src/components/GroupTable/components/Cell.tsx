@@ -12,10 +12,10 @@ import Popover from '@components/Popover';
 import Tooltip from '@components/Tooltip';
 import Typography from '@components/Typography';
 
-import { OPTIONS_STATUS } from '../constants';
+import { EventKeysCell, MappingHotKeys, OPTIONS_STATUS } from '../constants';
 import { focusElementById, getLabelOption, isValidValue, optionStatus } from '../helpers';
 import { CellProps, RenderCellProps } from '../props';
-import { BoxAdornment, Cell, FlexBox, Input, Option } from '../styles';
+import { BoxAdornment, Cell, FlexBox, HotKey, Input, Option } from '../styles';
 
 export default ({
   children,
@@ -31,7 +31,7 @@ export default ({
   accessor,
   inputType,
   maxLength,
-  numberProps,
+  numberProps, // To Do: event for number cell
   mappingOption,
   endAdornment,
   hiddenSelectStatus = () => false,
@@ -45,7 +45,8 @@ export default ({
   const _value = get(cell, 'value');
   const _status = typeof status === 'string' ? get(cell, `row.${status}`) : status;
   const isOptions = !_value && _status !== undefined;
-  const _children = isOptions ? getLabelOption(OPTIONS_STATUS[_status], mappingOption?.[_status]) : children;
+  const _children = isOptions ? getLabelOption(OPTIONS_STATUS[_status].label, mappingOption?.[_status]) : children;
+  const useStatus = !(disabled || disabledEdit) && !hiddenSelectStatus(cell) && isOptions;
 
   const handleBlur = () => {
     const currentValue = inputEl?.current?.value;
@@ -58,9 +59,9 @@ export default ({
     if (editCell) setEditCell(false);
   };
 
-  const handleChange = (value: any, path?: string) => {
-    set(inputEl, path || 'current.value', value);
-  };
+  const handleChange = (value: any, path?: string) => set(inputEl, path || 'current.value', value);
+
+  const handleStatusChange = (selected: number) => handleEditCell({ value: selected, accessor: status, rowInfo: cell });
 
   useEffect(() => {
     const isEmpty = !_value;
@@ -71,8 +72,25 @@ export default ({
     );
   }, [_children, _value, status]);
 
+  const handleKeyDownInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+
+    switch (e.code) {
+      case 'Tab':
+        setEditCell(false);
+        focusElementById(`cell-${tabIndex}`);
+        break;
+      case 'Enter':
+        focusElementById(`cell-${tabIndex + cellInOtherRow}`, `cell-${tabIndex}`);
+        setEditCell(false);
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Delete', 'Escape'].includes(e.code)) {
+    if (EventKeysCell.includes(e.code)) {
       e.preventDefault();
     }
 
@@ -92,24 +110,17 @@ export default ({
       case 'ArrowRight':
         cellIdx = cellIdx + 1;
         break;
-      case 'Enter':
-        if (!editCell) {
-          focusElementById(`cell-input-${tabIndex}`);
-          setEditCell(true);
-        } else {
-          focusElementById(`cell-${tabIndex}`);
-          setEditCell(false);
-        }
-        break;
       case 'Delete':
         handleChange(null);
         focusElementById(`cell-input-${tabIndex}`);
         break;
-      case 'Escape':
-        handleChange(_value);
-        focusElementById(`cell-${tabIndex}`);
-        break;
       default:
+        if (useStatus && Object.keys(MappingHotKeys).includes(e.code)) {
+          handleStatusChange(get(MappingHotKeys, e.code));
+        } else if (!editCell && !(disabled || disabledEdit)) {
+          focusElementById(`cell-input-${tabIndex}`);
+          setEditCell(true);
+        }
         break;
     }
 
@@ -136,26 +147,29 @@ export default ({
         }}
       >
         <MenuList>
-          {optionStatus.map(({ label, value }) => {
-            const { label: mLabel, disabledMessage, isDisabledOption = () => false } = mappingOption?.[value] ?? {};
+          {optionStatus.map(({ label, hotKey, value: otp }) => {
+            const { label: mLabel, disabledMessage, isDisabledOption = () => false } = mappingOption?.[otp] ?? {};
 
-            const _disabled: boolean = value === _status || isDisabledOption(cell);
+            const _disabled: boolean = otp === _status || isDisabledOption(cell);
 
             return (
               <Tooltip title={disabledMessage} disableHoverListener={!_disabled} placement='left' followCursor>
                 <Option
                   disableRipple
                   disabled={_disabled}
-                  status={value}
+                  status={otp}
                   style={_disabled ? { pointerEvents: 'inherit', cursor: 'pointer' } : {}}
                   onClick={() => {
                     if (!_disabled) {
-                      handleEditCell({ value, accessor: status, rowInfo: cell });
+                      handleStatusChange(otp);
                       setAnchorEl(null);
                     }
                   }}
                 >
                   <Typography variant='bodyMedium'>{getLabelOption(label, { label: mLabel })}</Typography>
+                  <HotKey component='div' variant='bodyMedium'>
+                    {hotKey}
+                  </HotKey>
                 </Option>
               </Tooltip>
             );
@@ -188,14 +202,13 @@ export default ({
             disabledEdit={disabledEdit}
             alignData={alignData}
             maxLength={maxLength}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDownInput}
+            onChange={(e) => handleChange(e.target.value)}
             onInput={(e) => {
               if (maxLength && inputType === 'number') {
                 set(e, 'target.value', get(e, 'target.value')?.slice(0, maxLength));
               }
-            }}
-            onBlur={handleBlur}
-            onChange={(e) => {
-              handleChange(e.target.value);
             }}
           />
           {endAdornment && (
@@ -203,7 +216,7 @@ export default ({
               {endAdornment(cell)}
             </BoxAdornment>
           )}
-          {!disabled && !disabledEdit && !hiddenSelectStatus(cell) && isOptions && (
+          {useStatus && (
             <BoxAdornment className={isHoverShowAdornment && !anchorEl ? 'endAdornment' : ''} ml={0.75}>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 {anchorEl ? <ArrowUp fontSize='small' /> : <ArrowDown fontSize='small' />}

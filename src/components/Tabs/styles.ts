@@ -9,7 +9,7 @@ const StyledTab = styled(Tab)(({ theme }: Record<string, any>) => ({
   minWidth: 'unset',
   minHeight: 'unset',
   textTransform: 'none',
-  height: theme.spacing(4),
+  height: theme.spacing(4.5),
   color: theme.newColors.gray[400],
   padding: `${theme.spacing(0, 1)} !important`,
   '&.Mui-selected': {
@@ -42,8 +42,8 @@ const StyledTabs = styled(Tabs)(({ theme, value }: Record<string, any>) => {
       opacity: 0.3,
     },
     '& .MuiTabs-indicator': {
+      justifyContent,
       display: 'flex',
-      justifyContent: justifyContent,
       backgroundColor: 'transparent',
     },
     '& .MuiTabs-indicatorSpan': {
@@ -60,7 +60,7 @@ const TabsGroup = styled(Box)(({ theme }: Record<string, any>) => ({
   '& .Divider': {
     position: 'absolute',
     width: '100%',
-    minHeight: theme.spacing(4),
+    minHeight: theme.spacing(4.5),
     borderBottom: `solid 2px ${theme.newColors.gray[200]} `,
   },
 }));

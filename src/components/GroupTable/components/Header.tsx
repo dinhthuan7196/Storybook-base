@@ -51,14 +51,6 @@ export default ({
     );
   }
 
-  if (isShowTooltip) {
-    children = (
-      <Tooltip arrow title={header} placement='top'>
-        <Box className='ellipsis'>{children}</Box>
-      </Tooltip>
-    );
-  }
-
   return (
     <Header
       className={!isShowTooltip ? 'ellipsis' : ''}
@@ -72,7 +64,9 @@ export default ({
       rowSpan={rowSpan}
       disabled={disabled}
     >
-      {children}
+      <Tooltip arrow title={header} disableHoverListener={!isShowTooltip} placement='left'>
+        <Box className='ellipsis'>{children}</Box>
+      </Tooltip>
     </Header>
   );
 };

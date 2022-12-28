@@ -10,10 +10,29 @@ const PROGRESS_STATUS = {
 };
 
 const OPTIONS_STATUS = {
-  [PROGRESS_STATUS.MISSING]: 'Missing',
-  [PROGRESS_STATUS.MISSED]: 'Missed',
-  [PROGRESS_STATUS.TURN_IN]: 'Turned In',
-  [PROGRESS_STATUS.LATE_TURN_IN]: 'Turned In (Late)',
+  [PROGRESS_STATUS.MISSING]: {
+    label: 'Missing',
+    hotKey: 'm',
+  },
+  [PROGRESS_STATUS.MISSED]: {
+    label: 'Missed',
+  },
+  [PROGRESS_STATUS.TURN_IN]: {
+    label: 'Turned In',
+    hotKey: 't',
+  },
+  [PROGRESS_STATUS.LATE_TURN_IN]: {
+    label: 'Turned In (Late)',
+    hotKey: 'l',
+  },
 };
 
-export { PROGRESS_STATUS, OPTIONS_STATUS };
+const EventKeysCell = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Delete', 'Escape'];
+
+const MappingHotKeys = {
+  KeyM: PROGRESS_STATUS.MISSING,
+  KeyT: PROGRESS_STATUS.TURN_IN,
+  KeyL: PROGRESS_STATUS.LATE_TURN_IN,
+};
+
+export { PROGRESS_STATUS, OPTIONS_STATUS, EventKeysCell, MappingHotKeys };

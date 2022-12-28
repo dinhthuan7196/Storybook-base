@@ -45,14 +45,17 @@ export default ({
         value={value}
         orientation={orientation}
         TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }}
-        onChange={(e: React.SyntheticEvent, newValue: number) => {
-          handleChangeTab(newValue);
-          setValue(newValue);
-        }}
+        onChange={(e: React.SyntheticEvent, newValue: number) => setValue(newValue)}
         {...rest}
       >
-        {tabs.map((tab, index) => (
-          <StyledTab id={`tab-${index}`} key={`tab-${index}`} aria-controls={`tabPanel-${index}`} {...tab} />
+        {tabs.map(({ key, ...tRest }, index) => (
+          <StyledTab
+            id={`tab-${index}`}
+            key={`tab-${index}`}
+            aria-controls={`tabPanel-${index}`}
+            onClick={() => handleChangeTab({ key, tabIndex: index })}
+            {...tRest}
+          />
         ))}
       </StyledTabs>
     );
